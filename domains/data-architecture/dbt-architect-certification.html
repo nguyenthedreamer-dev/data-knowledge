@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dbt Architect Certification — Tài liệu ôn thi tổng hợp</title>
+<meta name="description" content="Tổng hợp từ dbt Learn, trang kỳ thi chính thức, Study Guide PDF v6.3 và docs.getdbt.com · Cập nhật 2026-07">
+<style>
+:root{
+  --bg:#0d1220; --bg-2:#121a2b; --card:#151f33; --card-2:#1b2740;
+  --line:#26344f; --line-2:#334561;
+  --txt:#e9eefb; --txt-2:#c3cfe6; --muted:#93a4c4;
+  --accent:#ff6b4a; --accent-2:#4cc9f0; --ok:#7ee787; --warn:#ffb703;
+  --code-bg:#0a1020;
+  --sidebar:320px;
+  --maxw:900px;
+}
+html[data-theme="light"]{
+  --bg:#f7f9fc; --bg-2:#ffffff; --card:#ffffff; --card-2:#f1f5fb;
+  --line:#e1e8f2; --line-2:#cfdae9;
+  --txt:#121a2b; --txt-2:#33415a; --muted:#5f7290;
+  --accent:#e14b28; --accent-2:#0b7fa8; --ok:#1a7f37; --warn:#b45309;
+  --code-bg:#f3f6fb;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--txt);
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  font-size:16.5px; line-height:1.72; -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent-2); text-decoration:none; border-bottom:1px solid transparent}
+a:hover{border-bottom-color:currentColor}
+
+/* ---------- progress ---------- */
+#progress{
+  position:fixed; top:0; left:0; height:3px; width:0;
+  background:linear-gradient(90deg,var(--accent),var(--warn));
+  z-index:60; transition:width .1s linear;
+}
+
+/* ---------- top bar ---------- */
+header.topbar{
+  position:fixed; top:0; left:0; right:0; height:58px; z-index:50;
+  display:flex; align-items:center; gap:12px; padding:0 16px;
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(12px); border-bottom:1px solid var(--line);
+}
+.topbar .brand{font-weight:750; font-size:15px; letter-spacing:-.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.topbar .brand span{color:var(--accent)}
+.topbar .spacer{flex:1}
+.btn{
+  display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 12px;
+  border:1px solid var(--line-2); border-radius:9px; background:var(--card);
+  color:var(--txt-2); font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;
+}
+.btn:hover{border-color:var(--accent); color:var(--txt)}
+#menuBtn{display:none}
+#search{
+  height:34px; width:min(300px,42vw); padding:0 12px; border-radius:9px;
+  border:1px solid var(--line-2); background:var(--card); color:var(--txt); font-size:13.5px;
+  font-family:inherit;
+}
+#search:focus{outline:none; border-color:var(--accent-2)}
+
+/* ---------- layout ---------- */
+.shell{display:flex; padding-top:58px}
+nav.toc{
+  position:fixed; top:58px; bottom:0; left:0; width:var(--sidebar);
+  overflow-y:auto; padding:18px 10px 60px 18px;
+  border-right:1px solid var(--line); background:var(--bg-2);
+}
+nav.toc .toc-title{
+  font-size:11px; font-weight:750; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted); margin:4px 0 12px 8px;
+}
+nav.toc a{
+  display:block; padding:5px 10px; margin:1px 0; border-radius:7px;
+  color:var(--txt-2); font-size:13.5px; line-height:1.45; border:0;
+  border-left:2px solid transparent;
+}
+nav.toc a.lvl3{padding-left:22px; font-size:12.8px; color:var(--muted)}
+nav.toc a.lvl4{padding-left:34px; font-size:12.4px; color:var(--muted)}
+nav.toc a:hover{background:var(--card-2); color:var(--txt)}
+nav.toc a.active{background:color-mix(in srgb,var(--accent) 16%,transparent); color:var(--txt); border-left-color:var(--accent); font-weight:650}
+nav.toc a.hidden{display:none}
+nav.toc .nores{color:var(--muted); font-size:13px; padding:8px 10px; display:none}
+
+main{
+  margin-left:var(--sidebar); flex:1; min-width:0;
+  padding:34px clamp(18px,4vw,56px) 140px;
+}
+article{max-width:var(--maxw); margin:0 auto}
+
+/* ---------- hero ---------- */
+.hero{
+  border:1px solid var(--line); border-radius:18px; padding:clamp(22px,3vw,34px);
+  background:
+    radial-gradient(700px 300px at 100% -40%, color-mix(in srgb,var(--accent) 18%,transparent), transparent 60%),
+    var(--card);
+  margin-bottom:34px;
+}
+.hero .eyebrow{font-size:11px; font-weight:750; letter-spacing:.2em; text-transform:uppercase; color:var(--accent)}
+.hero h1{margin:10px 0 6px; font-size:clamp(26px,3.6vw,40px); line-height:1.14; letter-spacing:-.02em; border:0; padding:0}
+.hero p{color:var(--muted); margin:0; font-size:14.5px}
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:18px}
+.chip{
+  font-size:12px; font-weight:650; padding:5px 11px; border-radius:99px;
+  border:1px solid var(--line-2); background:var(--card-2); color:var(--txt-2);
+}
+
+/* ---------- content typography ---------- */
+article h1,article h2,article h3,article h4{line-height:1.25; letter-spacing:-.015em; scroll-margin-top:76px}
+article > h1{display:none}
+article h2{
+  font-size:clamp(21px,2.4vw,28px); font-weight:780; margin:52px 0 16px;
+  padding-bottom:10px; border-bottom:2px solid var(--line);
+}
+article h3{font-size:clamp(17px,1.8vw,20.5px); font-weight:730; margin:34px 0 10px; color:var(--txt)}
+article h4{font-size:16px; font-weight:700; margin:24px 0 8px; color:var(--txt-2)}
+article h2 .anchor,article h3 .anchor,article h4 .anchor{
+  opacity:0; margin-left:8px; font-size:.72em; color:var(--muted); border:0; font-weight:500;
+}
+h2:hover .anchor,h3:hover .anchor,h4:hover .anchor{opacity:1}
+article p{margin:0 0 14px}
+article strong{color:var(--txt); font-weight:680}
+article ul,article ol{margin:0 0 16px; padding-left:24px}
+article li{margin:5px 0}
+article li::marker{color:var(--accent)}
+article ul ul,article ol ol,article ul ol,article ol ul{margin:6px 0}
+hr{height:1px; border:0; background:var(--line); margin:46px 0}
+
+/* ---------- blockquote as callout ---------- */
+blockquote{
+  margin:18px 0; padding:14px 18px; border-radius:0 12px 12px 0;
+  border-left:4px solid var(--warn);
+  background:color-mix(in srgb,var(--warn) 10%,var(--card));
+  color:var(--txt-2);
+}
+blockquote p{margin:0 0 8px}
+blockquote p:last-child{margin:0}
+blockquote strong{color:var(--txt)}
+
+/* ---------- code ---------- */
+code{
+  font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.875em; background:var(--code-bg); border:1px solid var(--line);
+  padding:1.5px 6px; border-radius:6px; color:var(--accent-2); white-space:nowrap;
+}
+html[data-theme="light"] code{color:#b3245c}
+pre{
+  background:var(--code-bg); border:1px solid var(--line); border-radius:12px;
+  padding:14px 16px; overflow-x:auto; margin:16px 0;
+}
+pre code{background:none; border:0; padding:0; color:var(--txt-2); font-size:13.5px; white-space:pre; line-height:1.6}
+
+/* ---------- tables ---------- */
+.tablewrap{
+  overflow-x:auto; margin:18px 0; border:1px solid var(--line);
+  border-radius:12px; background:var(--card);
+}
+table{border-collapse:collapse; width:100%; font-size:14.3px}
+thead th{
+  position:sticky; top:0; background:var(--card-2); text-align:left;
+  font-weight:720; font-size:12.4px; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--line-2); white-space:nowrap;
+}
+tbody td{padding:11px 14px; border-bottom:1px solid var(--line); vertical-align:top; color:var(--txt-2)}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:var(--card-2)}
+td strong{color:var(--txt)}
+td code,th code{white-space:normal}
+
+/* ---------- checklist ---------- */
+li.task{list-style:none; margin-left:-24px; display:flex; gap:10px; align-items:flex-start}
+li.task input{
+  appearance:none; width:18px; height:18px; margin:4px 0 0; flex:0 0 auto;
+  border:1.5px solid var(--line-2); border-radius:5px; background:var(--card); cursor:pointer;
+}
+li.task input:checked{background:var(--ok); border-color:var(--ok)}
+li.task input:checked::after{content:"✓"; color:#06210f; font-size:13px; font-weight:800; display:block; text-align:center; line-height:15px}
+li.task.done > span{color:var(--muted); text-decoration:line-through}
+
+/* ---------- inline TOC card in doc ---------- */
+.doc-toc{
+  border:1px solid var(--line); background:var(--card); border-radius:14px;
+  padding:18px 22px; margin:0 0 8px;
+}
+.doc-toc ol{margin:0; padding-left:20px}
+.doc-toc li{margin:6px 0; color:var(--txt-2)}
+
+/* ---------- search highlight ---------- */
+mark.hit{background:color-mix(in srgb,var(--warn) 60%,transparent); color:inherit; border-radius:3px; padding:0 2px}
+
+/* ---------- back to top ---------- */
+#top{
+  position:fixed; right:22px; bottom:22px; z-index:40; width:42px; height:42px;
+  border-radius:12px; display:none; align-items:center; justify-content:center;
+  font-size:17px; padding:0;
+}
+#top.show{display:flex}
+
+/* ---------- responsive ---------- */
+.scrim{
+  position:fixed; inset:58px 0 0; background:rgba(4,8,16,.55); z-index:44; display:none;
+}
+@media (max-width:1080px){
+  :root{--sidebar:290px}
+}
+@media (max-width:900px){
+  #menuBtn{display:inline-flex}
+  nav.toc{transform:translateX(-102%); transition:transform .22s ease; z-index:45; width:300px; box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  body.nav-open nav.toc{transform:none}
+  body.nav-open .scrim{display:block}
+  main{margin-left:0}
+  .topbar .brand{font-size:13.5px}
+  #search{width:min(190px,38vw)}
+  body{font-size:16px}
+}
+@media print{
+  header.topbar,nav.toc,#progress,#top,.scrim{display:none!important}
+  main{margin:0; padding:0}
+  body{background:#fff; color:#000}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<header class="topbar">
+  <button class="btn" id="menuBtn" aria-label="Mở mục lục">☰</button>
+  <div class="brand">dbt <span>Architect</span> Certification — ôn thi</div>
+  <div class="spacer"></div>
+  <input id="search" type="search" placeholder="Tìm trong tài liệu…  ( / )" aria-label="Tìm kiếm">
+  <button class="btn" id="themeBtn">☀︎ Sáng</button>
+</header>
+
+<div class="shell">
+  <nav class="toc" id="tocWrap" aria-label="Mục lục">
+    <div class="toc-title">Mục lục</div>
+    <div id="toc"></div>
+  </nav>
+  <div class="scrim"></div>
+
+  <main>
+    <article>
+      <div class="hero">
+        <div class="eyebrow">Tài liệu ôn thi</div>
+        <h1>dbt Architect Certification — Tài liệu ôn thi tổng hợp</h1>
+        <p>Tổng hợp từ dbt Learn, trang kỳ thi chính thức, Study Guide PDF v6.3 và docs.getdbt.com · Cập nhật 2026-07</p>
+        <div class="chips">
+          <span class="chip">65 câu · 120 phút · đạt 65%</span>
+          <span class="chip">8 topic blueprint</span>
+          <span class="chip">6 milestones</span>
+          <span class="chip">9 mục lớn</span>
+          <span class="chip">107 link nguồn</span>
+          <span class="chip">~40 phút đọc</span>
+        </div>
+      </div>
+<h1 id="dbt-architect-certification--tài-liệu-ôn-thi-tổng-hợp">dbt Architect Certification — Tài liệu ôn thi tổng hợp</h1>
+<blockquote>
+<p>Tổng hợp từ <a href="https://learn.getdbt.com/learn/learning-path/dbt-certified-cloud-architect">dbt Certified Architect Path (learn.getdbt.com)</a>, <a href="https://www.getdbt.com/certifications/dbt-architect-certification-exam">trang kỳ thi chính thức</a>, <a href="https://www.getdbt.com/dbt-assets/dbt-certificate-study-guide-for-cloud-architect">Study Guide PDF v6.3 của dbt Labs</a> và docs.getdbt.com.
+Nội dung đã được diễn giải lại/tóm lược sang tiếng Việt để tuân thủ giới hạn bản quyền của nguồn.
+Bản tiếng Anh: <a href="./dbt-architect-certification-en.md">dbt-architect-certification-en.md</a>
+Cập nhật: 2026-07.</p>
+</blockquote>
+<hr />
+<h2 id="mục-lục">Mục lục</h2>
+<ol>
+<li><a href="#1-tổng-quan-kỳ-thi">Tổng quan kỳ thi</a></li>
+<li><a href="#2-blueprint--8-topic-được-đánh-giá">Blueprint — 8 topic được đánh giá</a></li>
+<li><a href="#3-learning-path-chính-thức-6-milestones">Learning Path chính thức (6 Milestones) — có gắn link video</a></li>
+<li><a href="#4-kiến-thức-ôn-tập-chi-tiết">Kiến thức ôn tập chi tiết theo từng topic</a></li>
+<li><a href="#5-10-câu-hỏi-mẫu-chính-thức">10 câu hỏi mẫu chính thức + đáp án + giải thích</a></li>
+<li><a href="#6-những-vùng-dễ-mất-điểm-nhất">Những vùng dễ mất điểm nhất</a></li>
+<li><a href="#7-kế-hoạch-ôn-46-tuần">Kế hoạch ôn 4–6 tuần + checklist trước ngày thi</a></li>
+<li><a href="#8-nguồn-tham-khảo">Nguồn tham khảo</a></li>
+</ol>
+<hr />
+<h2 id="1-tổng-quan-kỳ-thi">1. Tổng quan kỳ thi</h2>
+<table>
+<thead>
+<tr>
+<th>Hạng mục</th>
+<th>Chi tiết</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tên</td>
+<td>dbt Architect Certification Exam (khi ra mắt gọi là "dbt Cloud Architect")</td>
+</tr>
+<tr>
+<td>Thời lượng</td>
+<td>2 giờ</td>
+</tr>
+<tr>
+<td>Số câu</td>
+<td>65 (có thêm một số câu <strong>không tính điểm</strong>, không phân biệt được với câu tính điểm)</td>
+</tr>
+<tr>
+<td>Điểm đạt</td>
+<td>65% (~43 câu đúng)</td>
+</tr>
+<tr>
+<td>Cách chấm</td>
+<td>1 điểm/câu đúng, 0 điểm câu sai, <strong>mọi câu có trọng số bằng nhau</strong>, không trừ điểm</td>
+</tr>
+<tr>
+<td>Hình thức</td>
+<td>Online proctored, đăng ký qua <a href="https://pages.talview.com/dbtlabs/certifications/">Talview</a></td>
+</tr>
+<tr>
+<td>Trình duyệt</td>
+<td>Caveon Web browser</td>
+</tr>
+<tr>
+<td>Giá</td>
+<td>200 USD/lần thi (miễn phí phụ trội cho Coalesce premium attendee, giảm giá cho dbt Labs SI Partner)</td>
+</tr>
+<tr>
+<td>Ngôn ngữ</td>
+<td>Study guide PDF ghi "English only"; trang kỳ thi hiện tại đã có <strong>English / Japanese / French</strong></td>
+</tr>
+<tr>
+<td>Kết quả</td>
+<td>Biết điểm ngay sau khi submit</td>
+</tr>
+<tr>
+<td>Hiệu lực</td>
+<td><strong>2 năm</strong> kể từ ngày đạt</td>
+</tr>
+<tr>
+<td>Thi lại</td>
+<td>Được thi lại, phải trả phí lại. Hủy/đổi lịch miễn phí nếu ≥ 24h trước giờ thi. No-show không hoàn tiền</td>
+</tr>
+</tbody>
+</table>
+<h3 id="đối-tượng-và-điều-kiện-nền">Đối tượng và điều kiện nền</h3>
+<ul>
+<li>dbt Labs khuyến nghị: thành thạo SQL + <strong>tối thiểu 6 tháng kinh nghiệm administrate một account dbt Enterprise</strong>.</li>
+<li>Prerequisite thực tế của learning path: hoàn thành <strong>dbt Fundamentals</strong>, và tốt nhất là đã có <strong>dbt Analytics Engineering Certification</strong> trước.</li>
+<li>Nên biết về <strong>ADLC (Analytics Development Lifecycle)</strong> — framework dbt Labs dùng để định hình kiến trúc dbt.</li>
+<li>Đây là kỳ thi về <strong>admin/platform</strong>, không phải về phát triển model. Không kiểm tra chi tiết đặc thù của một warehouse hay một Git provider cụ thể — nó kiểm tra best practice mang tính tổng quát.</li>
+</ul>
+<h3 id="các-dạng-câu-hỏi-rất-quan-trọng--không-chỉ-có-trắc-nghiệm">Các dạng câu hỏi (rất quan trọng — không chỉ có trắc nghiệm)</h3>
+<table>
+<thead>
+<tr>
+<th>Dạng</th>
+<th>Ghi chú chiến thuật</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multiple-choice (1 hoặc nhiều đáp án)</td>
+<td>Đề có ghi rõ "2 possible solutions" khi cần chọn nhiều</td>
+</tr>
+<tr>
+<td>Fill-in-the-blank</td>
+<td>Phải nhớ chính xác tên setting/prefix/command</td>
+</tr>
+<tr>
+<td>Matching</td>
+<td>Ghép permission set ↔ quyền, job type ↔ trigger</td>
+</tr>
+<tr>
+<td>Hotspot</td>
+<td>Click đúng vùng trên ảnh screenshot UI / sơ đồ</td>
+</tr>
+<tr>
+<td>Build list</td>
+<td>Sắp xếp đúng <strong>thứ tự</strong> các bước / các command trong job</td>
+</tr>
+<tr>
+<td><strong>DOMC</strong> (Discrete Option Multiple Choice)</td>
+<td>Từng đáp án hiện lên riêng lẻ, bạn phải trả lời Yes/No cho từng cái và <strong>không xem lại được</strong>. Không dùng được kỹ thuật loại trừ → phải biết chắc</td>
+</tr>
+</tbody>
+</table>
+<p>DOMC là dạng gây mất điểm nhiều nhất. Với DOMC, hãy tự trả lời câu hỏi trong đầu <strong>trước khi</strong> đọc option đầu tiên.</p>
+<p>Quản lý thời gian: 65 câu / 120 phút ≈ <strong>1 phút 50 giây/câu</strong>. Câu nào bí thì flag và bỏ qua (trừ DOMC — không quay lại được).</p>
+<hr />
+<h2 id="2-blueprint--8-topic-được-đánh-giá">2. Blueprint — 8 topic được đánh giá</h2>
+<p>Đây là topic outline chính thức mà các SME của dbt Labs dùng để viết đề. dbt Labs <strong>không công bố tỷ lệ % cho từng topic</strong> (mọi câu trọng số bằng nhau).</p>
+<h3 id="topic-1--configuring-dbt-data-warehouse-connections">Topic 1 — Configuring dbt data warehouse connections</h3>
+<ul>
+<li>Cách kết nối warehouse</li>
+<li>Cấu hình IP whitelist</li>
+<li>Tạo và test connection cho project</li>
+<li>Xác thực qua OAuth để truy cập dữ liệu trong dbt</li>
+<li>Thêm Client ID và Secret cho OAuth</li>
+</ul>
+<h3 id="topic-2--configuring-dbt-git-connections">Topic 2 — Configuring dbt git connections</h3>
+<ul>
+<li>Kết nối git repo vào dbt</li>
+<li>Thiết lập integration với các git provider</li>
+</ul>
+<h3 id="topic-3--creating-and-maintaining-dbt-environments">Topic 3 — Creating and maintaining dbt environments</h3>
+<ul>
+<li>Access control giữa các environment khác nhau</li>
+<li>Khi nào dùng service account</li>
+<li>Rotate key pair authentication qua API</li>
+<li>Environment variables</li>
+<li>Tạo deployment environment mới</li>
+<li>Set default schema/dataset cho environment</li>
+<li>Custom branch và cách gán vào environment</li>
+<li>Cấu hình dbt để defer sang environment khác</li>
+</ul>
+<h3 id="topic-4--creating-and-maintaining-job-definitions">Topic 4 — Creating and maintaining job definitions</h3>
+<ul>
+<li>Set up CI job có deferral</li>
+<li>Các step bên trong một dbt job</li>
+<li>Đặt schedule cho job</li>
+<li>Thứ tự đúng của các run command</li>
+<li>Tạo job mới</li>
+<li>Các setting optional: env var override, threads, deferral, target name, dbt version override</li>
+<li>Generate documentation trong job để populate trang dbt Catalog</li>
+<li>Job chaining (trigger job sau khi job khác xong)</li>
+<li>Cấu hình Advanced CI</li>
+<li>Cấu hình self-deferral</li>
+<li>Biết chọn <strong>loại deferral nào</strong> cho tình huống nào</li>
+</ul>
+<h3 id="topic-5--configuring-dbt-security-and-licenses">Topic 5 — Configuring dbt security and licenses</h3>
+<ul>
+<li>Tạo service token cho API access</li>
+<li>Gán permission set</li>
+<li>Tạo license mapping</li>
+<li>Thêm/xóa user</li>
+<li>Thêm SSO application cho dbt Enterprise</li>
+<li>Tạo và gán RBAC</li>
+</ul>
+<h3 id="topic-6--setting-up-monitoring-and-alerting-for-jobs">Topic 6 — Setting up monitoring and alerting for jobs</h3>
+<ul>
+<li>Email notification</li>
+<li>Webhooks cho integration event-driven với hệ thống khác</li>
+</ul>
+<h3 id="topic-7--setting-up-a-dbt-mesh-and-leveraging-cross-project-references">Topic 7 — Setting up a dbt mesh and leveraging cross-project references</h3>
+<ul>
+<li>Tạo thêm project dbt</li>
+<li>Environment type liên quan thế nào tới cross-project reference</li>
+<li>Model governance</li>
+</ul>
+<h3 id="topic-8--configuring-and-using-dbt-catalog">Topic 8 — Configuring and using dbt Catalog</h3>
+<ul>
+<li>Dùng Catalog để hiểu lineage, troubleshoot, tối ưu cost/performance</li>
+<li>Dùng Catalog để tìm public model và cross-project reference</li>
+</ul>
+<hr />
+<h2 id="3-learning-path-chính-thức-6-milestones">3. Learning Path chính thức (6 Milestones)</h2>
+<p>Nguồn: <a href="https://learn.getdbt.com/learn/learning-path/dbt-certified-cloud-architect">dbt Certified Architect Path</a> — bản thân trang path có 1 video giới thiệu (3:23).</p>
+<p>Ký hiệu: 🎥 = <strong>có video</strong> (Video / Course / MicroCourse trên dbt Learn đều là nội dung video + quiz) · 📄 = tài liệu đọc (doc/article) · <strong>[R]</strong> Required · <strong>[E]</strong> Elective</p>
+<h3 id="milestone-1--setting-up-dbt-connections">Milestone #1 — Setting up dbt Connections</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Nội dung</th>
+<th>Loại</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>[R]</strong></td>
+<td>dbt Architect Certification Learning Path Overview</td>
+<td>🎥 Video</td>
+<td><a href="https://learn.getdbt.com/courses/dbt-architect-certification-learning-path-overview">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>dbt and Data Platforms (~2h)</td>
+<td>🎥 Course</td>
+<td><a href="https://learn.getdbt.com/courses/dbt-cloud-and-data-platforms">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>Configuring public IP restrictions</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/configuring-public-ip-restrictions">mở</a> · <a href="https://docs.getdbt.com/docs/cloud/secure/ip-restrictions">docs</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>About data platform connections</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/about-data-platform-connections">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>Single sign-on (SSO) overview</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/single-sign-on-sso-overview">mở</a> · <a href="https://docs.getdbt.com/docs/cloud/manage-access/sso-overview">docs</a></td>
+</tr>
+<tr>
+<td><strong>[E]</strong></td>
+<td>Git Fundamentals</td>
+<td>🎥 Course</td>
+<td><a href="https://learn.getdbt.com/courses/git-fundamentals">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>Connect to GitHub</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/connect-to-github">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>Connect to GitLab</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/connect-to-gitlab">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>Connect to Azure DevOps</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/connect-to-azure-devops">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>Connect with Git clone</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/connect-with-git-clone">mở</a></td>
+</tr>
+<tr>
+<td><strong>[E]</strong></td>
+<td>dbt and Snowflake for Admins (~1h)</td>
+<td>🎥 Course</td>
+<td><a href="https://learn.getdbt.com/courses/dbt-cloud-and-snowflake-for-admins">mở</a></td>
+</tr>
+</tbody>
+</table>
+<p>Study guide PDF còn liệt kê các khóa admin theo platform khác (chọn theo warehouse bạn dùng):
+🎥 <a href="https://learn.getdbt.com/courses/dbt-cloud-and-databricks-for-admins">Databricks for Admins</a> · 🎥 <a href="https://learn.getdbt.com/courses/dbt-cloud-and-bigquery-for-admins">BigQuery for Admins</a> · 🎥 <a href="https://learn.getdbt.com/courses/dbt-cloud-and-redshift-for-admins">Redshift for Admins</a></p>
+<h3 id="milestone-2--configuring-and-managing-projects">Milestone #2 — Configuring and Managing Projects</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Nội dung</th>
+<th>Loại</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>[R]</strong></td>
+<td>dbt Environments (~1h)</td>
+<td>🎥 Course</td>
+<td><a href="https://learn.getdbt.com/courses/dbt-environments">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>Getting Started with git branching strategies in dbt</td>
+<td>📄 Article</td>
+<td><a href="https://learn.getdbt.com/courses/getting-started-with-git-branching-strategies-in-dbt">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>dbt deferral</td>
+<td>🎥 MicroCourse</td>
+<td><a href="https://learn.getdbt.com/courses/dbt-deferral">mở</a></td>
+</tr>
+<tr>
+<td><strong>[E]</strong></td>
+<td>Using defer in dbt</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/using-defer-in-dbt">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td><strong>Advanced Deployment (4h)</strong> — khóa quan trọng nhất của path</td>
+<td>🎥 Course</td>
+<td><a href="https://learn.getdbt.com/courses/advanced-deployment">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>Using threads</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/using-threads">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>dbt metadata</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/generating-dbt-metadata">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>Deploy jobs</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/deploy-jobs">mở</a> · <a href="https://docs.getdbt.com/docs/deploy/deploy-jobs">docs</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>Advanced Continuous Integration (CI)</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/advanced-continuous-integration-ci">mở</a> · <a href="https://docs.getdbt.com/docs/deploy/advanced-ci">docs</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="milestone-3--security-and-monitoring">Milestone #3 — Security and Monitoring</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Nội dung</th>
+<th>Loại</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>[R]</strong></td>
+<td>dbt Authentication Fundamentals (SSO, group, invite user, MFA)</td>
+<td>🎥 Video</td>
+<td><a href="https://learn.getdbt.com/courses/dbt-authentication-fundamentals">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>Service account tokens</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/service-account-tokens">mở</a> · <a href="https://docs.getdbt.com/docs/dbt-cloud-apis/service-tokens">docs</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>dbt Licenses and Permissions</td>
+<td>🎥 Course</td>
+<td><a href="https://learn.getdbt.com/courses/dbt-licenses-permissions">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>Enterprise permissions</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/enterprise-permissions">mở</a> · <a href="https://docs.getdbt.com/docs/cloud/manage-access/enterprise-permissions">docs</a></td>
+</tr>
+<tr>
+<td><strong>[E]</strong></td>
+<td>Self-service Starter account permissions</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/self-service-starter-account-permissions">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>Securing your account through SSO &amp; RBAC</td>
+<td>📄 Article</td>
+<td><a href="https://learn.getdbt.com/courses/establishing-dbt-cloud-securing-your-account-through-sso-rbac">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>Job Notifications</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/job-notifications">mở</a> · <a href="https://docs.getdbt.com/docs/deploy/job-notifications">docs</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>Webhooks (~1h)</td>
+<td>🎥 Course</td>
+<td><a href="https://learn.getdbt.com/courses/webhooks">mở</a></td>
+</tr>
+</tbody>
+</table>
+<p>Study guide PDF bổ sung các khóa SSO/RBAC theo IdP (đều là 🎥 course trên dbt Learn): Role-based access control với <strong>dbt &amp; Okta</strong>, SSO với <strong>Entra ID</strong>, SSO với <strong>Google Workspace</strong>, SSO với <strong>Okta</strong> — tìm trong <a href="https://learn.getdbt.com/catalog">Course Catalog</a>.</p>
+<h3 id="milestone-4--governance-and-discovery">Milestone #4 — Governance and Discovery</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Nội dung</th>
+<th>Loại</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>[R]</strong></td>
+<td>dbt Mesh</td>
+<td>🎥 Course</td>
+<td><a href="https://learn.getdbt.com/courses/dbt-mesh">mở</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>Project dependencies</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/project-dependencies">mở</a> · <a href="https://docs.getdbt.com/docs/collaborate/govern/project-dependencies">docs</a></td>
+</tr>
+<tr>
+<td><strong>[R]</strong></td>
+<td>dbt Catalog</td>
+<td>🎥 Course</td>
+<td><a href="https://learn.getdbt.com/courses/dbt-catalog">mở</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="milestone-5--exam-preparation">Milestone #5 — Exam Preparation</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Nội dung</th>
+<th>Loại</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>[R]</strong></td>
+<td>dbt Cloud Architect Exam Study Guide</td>
+<td>📄 Resource</td>
+<td><a href="https://learn.getdbt.com/courses/dbt-cloud-architect-exam-study-guide">mở</a> · <a href="https://www.getdbt.com/dbt-assets/dbt-certificate-study-guide-for-cloud-architect">PDF trực tiếp</a></td>
+</tr>
+<tr>
+<td><strong>[E]</strong></td>
+<td><strong>Pro Tips for dbt Certifications</strong> — Hope Watson (Resident Architect) chia sẻ chiến thuật thi</td>
+<td>🎥 Video</td>
+<td><a href="https://learn.getdbt.com/courses/pro-tips-for-dbt-certifications">mở</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="milestone-6--exam-registration">Milestone #6 — Exam Registration</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Nội dung</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>[E]</strong></td>
+<td>Register for dbt Cloud Architect Exam</td>
+<td><a href="https://learn.getdbt.com/courses/register-for-dbt-cloud-architect-exam">mở</a> · <a href="https://pages.talview.com/dbtlabs/certifications/">Talview</a></td>
+</tr>
+<tr>
+<td><strong>[E]</strong></td>
+<td>Learning Path Survey (5 phút)</td>
+<td><a href="https://learn.getdbt.com/courses/learning-path-survey">mở</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="videokhóa-nền-tảng-nên-xem-trước">Video/khóa nền tảng nên xem trước</h3>
+<ul>
+<li>🎥 <a href="https://learn.getdbt.com/courses/dbt-fundamentals">dbt Fundamentals (~5h)</a> — prerequisite bắt buộc về mặt kiến thức.</li>
+<li>🎥 <a href="https://learn.getdbt.com/learning-paths/dbt-certified-developer">dbt Certified Developer Path</a> — nếu chưa có cert Analytics Engineering.</li>
+</ul>
+<hr />
+<h2 id="4-kiến-thức-ôn-tập-chi-tiết">4. Kiến thức ôn tập chi tiết</h2>
+<h3 id="41-data-platform-connections--authentication-topic-1">4.1 Data platform connections &amp; authentication (Topic 1)</h3>
+<p><strong>Kiến trúc connection</strong></p>
+<ul>
+<li>Connection được cấu hình ở <strong>account level</strong> và <strong>tái sử dụng</strong> được cho nhiều project và nhiều environment. Một project có thể dùng nhiều connection cùng loại warehouse.</li>
+<li>Hệ quả quan trọng cho thiết kế: <strong>không cần duplicate project</strong> cho dev/prod. Dùng <em>environment-level isolation</em> (mỗi environment trỏ connection/credential riêng).</li>
+<li><code>extended_attributes</code> cho phép override các thuộc tính profile theo từng environment mà UI không expose.</li>
+<li>Credential được chia 2 tầng: <strong>connection</strong> (host, account, warehouse, database…) ở account level và <strong>credential</strong> (user, role, schema, key) ở từng environment / từng user.</li>
+</ul>
+<p><strong>Cơ chế xác thực — điểm thi hay hỏi nhất</strong></p>
+<table>
+<thead>
+<tr>
+<th>Cơ chế</th>
+<th>Dùng ở đâu</th>
+<th>Ghi chú</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Username + password</td>
+<td>Dev &amp; Deployment</td>
+<td>Đơn giản, kém an toàn nhất</td>
+</tr>
+<tr>
+<td><strong>Key pair</strong> (Snowflake)</td>
+<td>Deployment (service account)</td>
+<td>Nên <strong>rotate định kỳ</strong>, có thể rotate qua <strong>Admin API</strong></td>
+</tr>
+<tr>
+<td><strong>OAuth / SSO OAuth</strong></td>
+<td><strong>Chỉ Development environment</strong></td>
+<td>Token có thời hạn do platform quyết định; user phải re-authorize khi hết hạn</td>
+</tr>
+<tr>
+<td>Service account / service principal</td>
+<td>Deployment (staging, prod)</td>
+<td><strong>Best practice cho mọi deployment environment</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Nguyên tắc phải nhớ: <strong>không dùng SSO/OAuth cho staging và production</strong>, vì session/token hết hạn → job tự động fail. Deployment luôn dùng <strong>service account</strong>.</p>
+</blockquote>
+<ul>
+<li>Set up OAuth: Snowflake OAuth, Databricks OAuth, BigQuery OAuth, External OAuth (Okta/Entra) — đều cần <strong>Client ID + Client Secret</strong> nhập vào dbt, cùng redirect URI của dbt.</li>
+<li>Phân quyền warehouse theo persona: developer có <strong>read</strong> trên schema production + <strong>read/write</strong> trên schema dev của mình; service account production có <strong>read/write</strong> trên schema production (bao gồm cả schema snapshot).</li>
+</ul>
+<p><strong>Network security</strong></p>
+<ul>
+<li><strong>IP restrictions</strong>: chỉ có trên <strong>Enterprise+ / Virtual Private</strong>. Cấu hình tại <code>Account Settings → IP Restrictions</code>, theo <strong>allowlist</strong> và <strong>blocklist</strong>. Chặn đồng thời service token, request API bằng personal token, và cả UI. <strong>Phải allowlist IP của Git provider</strong> (webhook inbound từ GitHub/GitLab/ADO) nếu không CI sẽ đứt.</li>
+<li><strong>Egress IP của dbt</strong>: phải allowlist ở phía warehouse (Access, Regions &amp; IP addresses).</li>
+<li><strong>PrivateLink</strong>: yêu cầu <strong>Business Critical (Enterprise+ / Virtual Private)</strong>. Đây là câu trả lời cho các bài toán <em>data residency</em> / GDPR / multi-region: dựng <strong>PrivateLink endpoint riêng cho từng region</strong> và cấu hình nhiều project trỏ vào endpoint tương ứng — <strong>không</strong> cần mua thêm account, và <strong>không</strong> dùng cross-platform Mesh để "nối" hai region (vì mục tiêu là cô lập dữ liệu).</li>
+</ul>
+<h3 id="42-git-connections-topic-2">4.2 Git connections (Topic 2)</h3>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Native integration</th>
+<th>Automated CI job</th>
+<th>Git clone</th>
+<th>Plan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GitHub</td>
+<td>✅ (dbt GitHub App)</td>
+<td>✅</td>
+<td>✅</td>
+<td>Mọi plan</td>
+</tr>
+<tr>
+<td>GitLab</td>
+<td>✅ (OAuth app)</td>
+<td>✅</td>
+<td>✅</td>
+<td>Mọi plan</td>
+</tr>
+<tr>
+<td>Azure DevOps</td>
+<td>✅ (service principal — khuyến nghị; OAuth 2.0)</td>
+<td>✅</td>
+<td>✅</td>
+<td><strong>Enterprise / Enterprise+</strong> (Starter/Developer chỉ deploy key, không có CI tự động)</td>
+</tr>
+<tr>
+<td>BitBucket, AWS CodeCommit, khác</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td>Dùng custom pipeline + Administrative API</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>GitLab Free</strong>: merge request vẫn trigger được CI job, nhưng <strong>status của CI job không báo ngược lại</strong> GitLab.</li>
+<li><strong>Git clone</strong>: dùng SSH URL + <strong>deploy key</strong> do dbt sinh ra (phải cấp write access ở repo). Không có webhook → <strong>dbt không tự drop schema CI tạm thời</strong>; phải tự trigger CI bằng Administrative API và tự dọn schema.</li>
+<li>Kết nối cấp project (repo) khác với <strong>personal git credential</strong> của từng developer (dùng cho IDE/CLI) — developer phải tự authorize profile GitHub của mình.</li>
+<li><strong>Branching strategy</strong>:</li>
+<li><em>Direct promotion</em>: một branch <code>main</code> duy nhất, developer branch → <code>main</code>.</li>
+<li><em>Indirect promotion</em>: có branch trung gian (<code>qa</code>/<code>staging</code>) → developer branch → <code>staging</code> → <code>main</code>. Cần <strong>custom branch</strong> trên environment tương ứng, branch protection rule, và quy trình <strong>hotfix</strong> riêng.</li>
+<li><strong>Custom branch</strong> trên environment: bắt buộc khi environment cần checkout branch khác <code>main</code> (ví dụ staging environment dùng branch <code>staging</code>; CI environment gắn custom branch để chỉ chạy khi PR nhắm vào branch đó).</li>
+</ul>
+<h3 id="43-environments-topic-3">4.3 Environments (Topic 3)</h3>
+<p><strong>Phân loại</strong></p>
+<ul>
+<li><strong>Development environment</strong>: mỗi project chỉ có <strong>1</strong>; phục vụ Studio IDE / CLI; cho phép OAuth.</li>
+<li><strong>Deployment environment</strong>, có <strong>3 type</strong>:</li>
+<li><strong>Production</strong> — nơi build dữ liệu production. <strong>Chỉ được đánh dấu 1 environment là production</strong> cho mỗi project; đây là <em>source of truth</em> và là điều kiện bắt buộc cho <strong>dbt Catalog</strong> và <strong>cross-project reference</strong>.</li>
+<li><strong>Staging</strong> — cho developer tiếp cận workflow deployment nhưng giới hạn quyền trên dữ liệu production; thường gắn long-lived branch <code>staging</code>.</li>
+<li><strong>General</strong> — deployment dùng chung; <strong>không nên</strong> dùng làm production cuối cùng.</li>
+</ul>
+<p><strong>Environment quyết định điều gì khi job chạy</strong>: phiên bản dbt / release track, thông tin connection + target database &amp; schema, và version code (branch) được thực thi.</p>
+<p><strong>Environment variables — nhớ chính xác</strong></p>
+<ul>
+<li>Prefix hợp lệ: <strong><code>DBT_</code></strong>, <strong><code>DBT_ENV_SECRET_</code></strong>, <strong><code>DBT_ENV_CUSTOM_ENV_</code></strong>.</li>
+<li>Key được <strong>uppercase</strong> và <strong>case-sensitive</strong> — gọi <code>{{ env_var('DBT_KEY') }}</code> phải khớp tuyệt đối.</li>
+<li><code>DBT_ENV_SECRET_*</code> được <strong>scrub khỏi toàn bộ log và error message</strong>.</li>
+<li>dbt có sẵn một số biến pre-defined <strong>không thể ghi đè</strong>.</li>
+<li><strong>Thứ tự ưu tiên (thấp → cao)</strong>:
+  1. <code>default</code> argument trong <code>{{ env_var('KEY', 'default') }}</code>
+  2. <strong>Project default</strong>
+  3. <strong>Environment level</strong>
+  4. <strong>Job override</strong> hoặc <strong>personal override</strong> trong Studio IDE</li>
+<li>Suy ra: xóa job-level override → giá trị fallback về <strong>environment level</strong>, <em>không</em> về project default.</li>
+<li>Thiếu giá trị ở mọi tầng → compile error "Env var required but not provided".</li>
+<li>Environment variable <strong>không đồng nghĩa</strong> với project variable (<code>vars:</code>).</li>
+</ul>
+<p><strong>Schema/database/target</strong></p>
+<ul>
+<li>Mỗi environment set <strong>target schema/dataset</strong> riêng → cùng một job materialize vào schema khác nhau theo environment. Đây là cơ chế chính.</li>
+<li>Muốn logic phức tạp hơn thì <strong>override macro <code>generate_schema_name</code></strong> (và <code>generate_database_name</code>, <code>generate_alias_name</code>).</li>
+<li><code>+schema:</code> trong model config chỉ là <strong>suffix custom schema</strong>, tự nó không thay đổi theo environment.</li>
+<li><strong>Custom target name</strong> (<code>{{ target.name }}</code>) để code rẽ nhánh theo ngữ cảnh (ví dụ CI chỉ xử lý subset dữ liệu).</li>
+</ul>
+<p><strong>Deferral (defer)</strong></p>
+<ul>
+<li>Defer cho phép build <strong>chỉ model đã thay đổi</strong>, các parent không đổi được <strong>resolve từ manifest của environment khác</strong> thay vì build lại.</li>
+<li>Cần <strong>manifest từ lần invoke trước</strong> (<code>--state</code>, và có thể tách <code>--defer-state</code>). Kết hợp với selector <code>state:modified+</code> → "Slim CI".</li>
+<li>Trong dbt platform: bật <em>defer to another environment</em> trên environment (cho IDE/CLI dev) hoặc trên job (<em>Compare changes against an environment</em>).</li>
+<li><strong>Thứ tự resolve</strong>: dbt ưu tiên object tồn tại trong schema đích của run hiện tại; chỉ những node chưa có mới lấy từ environment được defer.</li>
+<li><strong>Self-deferral</strong>: job defer về <strong>artifact của chính nó</strong> (lần run thành công gần nhất) — dùng khi không có production environment phù hợp để so sánh.</li>
+<li><strong>defer vs <code>dbt clone</code></strong>: clone tạo bản copy (zero-copy nếu platform hỗ trợ) các object production sang schema dev — dùng khi cần object thật sự tồn tại; defer chỉ trỏ reference, rẻ hơn.</li>
+<li><strong>Threads</strong>: điều khiển mức song song của connection. Tăng threads → chạy nhanh hơn nhưng tiêu concurrency của warehouse. Default job trong dbt platform là <strong>4</strong>.</li>
+</ul>
+<h3 id="44-jobs-topic-4">4.4 Jobs (Topic 4)</h3>
+<p><strong>Các loại job và trigger</strong></p>
+<table>
+<thead>
+<tr>
+<th>Loại</th>
+<th>Trigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Deploy job</strong></td>
+<td>Schedule (chọn ngày/giờ) · <strong>custom cron</strong> · <strong>trigger on job completion</strong> (job chaining) · API · Run now</td>
+</tr>
+<tr>
+<td><strong>CI job</strong></td>
+<td>Pull request được mở / có commit mới (có option <em>Run on draft PR</em>)</td>
+</tr>
+<tr>
+<td><strong>Merge job</strong></td>
+<td>Khi PR được merge vào branch (continuous deployment)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Scheduler dùng <strong>UTC</strong>, <strong>không</strong> tự điều chỉnh theo timezone hay DST.</li>
+<li><strong>Job chaining</strong>: một job chạy sau khi job upstream hoàn tất (Starter trở lên); dùng để tách staging → production, hoặc phối hợp job giữa các project trong Mesh.</li>
+</ul>
+<p><strong>Cấu hình bên trong job</strong></p>
+<ul>
+<li><strong>Commands</strong>: <code>dbt deps</code> chạy tự động ở đầu run. Best practice: một step một mục đích — <code>dbt build --select ...</code> rồi <code>dbt test</code>/snapshot/seed/full-refresh tách riêng để dễ khoanh vùng lỗi.</li>
+<li>Checkbox <strong>Run source freshness</strong>: chạy <code>dbt source freshness</code> <strong>trước</strong> các command khác.</li>
+<li>Checkbox <strong>Generate docs on run</strong>: sinh artifact docs → <strong>populate dbt Catalog</strong>. Nên bật ở job production; <strong>không</strong> nên bật ở CI job.</li>
+<li>Advanced settings: <strong>environment variable override</strong>, <strong>target name</strong>, <strong>dbt version override</strong> (chỉ nên dùng khi đang nâng version), <strong>threads</strong>, <strong>run timeout</strong>.</li>
+<li>Artifact quan trọng: <code>manifest.json</code> (logical state), <code>run_results.json</code>, <code>catalog.json</code>.</li>
+</ul>
+<p><strong>CI job — cấu hình chuẩn</strong></p>
+<ul>
+<li>Command mặc định: <code>dbt build --select state:modified+</code>.</li>
+<li><strong>State comparison chỉ hoạt động khi có deferred environment</strong> để so sánh → mặc định defer về <strong>Production</strong>.</li>
+<li>Build vào <strong>schema tạm riêng cho từng PR</strong>; dbt tự drop schema khi PR đóng/merge <strong>chỉ khi</strong> dùng native git integration (webhook). Trigger qua API thì phải tự dọn.</li>
+<li>Nên đặt CI job trong <strong>deployment environment riêng</strong> trỏ database staging để cô lập khỏi production.</li>
+<li>Tính năng kèm theo: <strong>concurrent CI checks</strong>, <strong>smart cancellation of stale builds</strong> (Starter/Enterprise+), <strong>SQL linting bằng SQLFluff</strong> (chạy như bước đầu, chọn <em>stop</em> hoặc <em>continue on error</em>).</li>
+<li>Trigger CI bằng API: <code>job_type: ci</code> + payload cần <code>github_pull_request_id</code> / <code>gitlab_merge_request_id</code> / <code>azure_devops_pull_request_id</code> / <code>non_native_pull_request_id</code>, kèm <code>git_sha</code> hoặc <code>git_branch</code>.</li>
+<li><strong>Semantic validation trong CI</strong>: <code>dbt sl validate --select state:modified+</code>.</li>
+</ul>
+<p><strong>Advanced CI — compare changes</strong></p>
+<ul>
+<li>Yêu cầu: <strong>Enterprise-tier</strong> + feature được admin bật → checkbox <strong><code>dbt compare</code></strong> xuất hiện trong CI job.</li>
+<li>Platform hỗ trợ: BigQuery, Databricks, Postgres, Redshift, Snowflake.</li>
+<li>So sánh <strong>last applied state của production environment</strong> với <strong>commit mới nhất của PR</strong>, mỗi lần mở PR hoặc push commit.</li>
+<li>Báo cáo thay đổi ở <strong>primary key, row, column</strong>; xem ở tab <strong>Compare</strong> trong job run details, đồng thời tóm tắt thành <strong>comment trên PR</strong> ở Git provider.</li>
+<li>Cần <strong>primary key constraint</strong> hoặc <strong>uniqueness test</strong> để phân tích ở mức record; nếu không sẽ báo "Primary key missing".</li>
+<li>Cấu hình <code>event_time</code> trên model/seed/snapshot/source → so sánh <strong>chỉ khoảng thời gian giao nhau</strong>, tránh báo sai "deleted rows" khi CI chỉ build subset, hoặc "new rows" khi CI có dữ liệu mới hơn prod.</li>
+<li>Cache: tối đa <strong>100 record mẫu/model đã đổi</strong>, lưu tối đa <strong>30 ngày</strong>, mã hóa, lưu ở region của account. Xem run cũ hơn 30 ngày → thông báo dữ liệu đã hết hạn.</li>
+<li>Timeout mặc định khi bật <code>dbt compare</code>: <strong>3600s</strong>.</li>
+<li>Giới hạn: CI model và production model <strong>phải cùng database host/connection</strong>, nếu defer sang environment ở host khác thì compare không hoạt động.</li>
+</ul>
+<p><strong>Hooks (dbt Labs không đưa vào study guide nhưng đề có hỏi)</strong></p>
+<ul>
+<li><code>pre-hook</code> / <code>post-hook</code> ở mức model; <code>on-run-start</code> / <code>on-run-end</code> ở mức project.</li>
+<li>Điểm bẫy: hook <strong>không</strong> giải quyết được vấn đề phân quyền ghi, vì credential deployment cần quyền write <strong>trước</strong> khi tạo/alter table. Grant bằng hook chỉ xử lý được việc cấp quyền <em>sau khi</em> object đã tồn tại.</li>
+</ul>
+<p><strong>Source freshness (cũng bị hỏi sâu hơn mong đợi)</strong></p>
+<ul>
+<li>Khai báo <code>loaded_at_field</code> + <code>freshness: {warn_after, error_after}</code> ở source (hoặc dùng metadata-based freshness của warehouse).</li>
+<li><code>dbt source freshness</code> sinh <code>sources.json</code>; kết quả hiển thị trong Catalog và có thể trigger <strong>notification loại Warns</strong>.</li>
+</ul>
+<h3 id="45-security-licenses--rbac-topic-5">4.5 Security, licenses &amp; RBAC (Topic 5)</h3>
+<p><strong>License type (mua theo seat)</strong> — <code>Developer</code>, <code>Read-only</code>, <code>IT</code>.</p>
+<blockquote>
+<p><strong>License luôn override permission set của group.</strong> Một user license Read-only nằm trong group Account Admin vẫn <strong>không</strong> làm được hành động admin.</p>
+</blockquote>
+<p><strong>Group + permission set = RBAC</strong></p>
+<ul>
+<li>Permission set gán cho <strong>group</strong>, group gán cho <strong>user</strong> (hoặc map từ IdP). Một group có thể có nhiều permission set; <strong>quyền cao hơn thắng</strong>.</li>
+<li>Group mặc định: <strong>Owner</strong> (Account admin), <strong>Member</strong> (Admin), <strong>Everyone</strong>.</li>
+<li>Chia làm 2 loại: <strong>account-level</strong> (quản trị account: invite user, SSO, tạo group, billing) và <strong>project-level</strong> (environment, IDE, job).</li>
+</ul>
+<p>Bảng permission set (Enterprise / Enterprise+) — cần phân biệt được, đề hay hỏi dạng matching:</p>
+<table>
+<thead>
+<tr>
+<th>Permission set</th>
+<th>Cấp</th>
+<th>Điểm đặc trưng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Account admin</strong></td>
+<td>Account</td>
+<td>Quyền cao nhất, không giới hạn. Default cho người tạo account và group Owner</td>
+</tr>
+<tr>
+<td><strong>Admin</strong></td>
+<td><strong>Project</strong></td>
+<td>Toàn quyền trên project <strong>đã có</strong>, không tạo được project mới; invite được user nhưng <strong>không tạo group</strong>. Default của group Member</td>
+</tr>
+<tr>
+<td><strong>Project creator</strong></td>
+<td>Account</td>
+<td>Set duy nhất ngoài Account admin <strong>tạo được project mới</strong>; tạo/sửa connection, invite user, tạo group, gán license</td>
+</tr>
+<tr>
+<td><strong>Account viewer</strong></td>
+<td>Account</td>
+<td>Read-only toàn account <strong>bao gồm audit log</strong> (nội dung sensitive). Không vào IDE</td>
+</tr>
+<tr>
+<td><strong>Stakeholder / Read-Only</strong></td>
+<td>Project</td>
+<td>Giống Account viewer nhưng <strong>không</strong> thấy account settings, billing, audit log sensitive</td>
+</tr>
+<tr>
+<td><strong>Security admin</strong></td>
+<td>Account</td>
+<td>User, group, license, <strong>authentication &amp; SSO</strong>, <strong>IP restrictions</strong>, xem service token. Không có job/run/environment/IDE. Là default của <strong>license IT</strong></td>
+</tr>
+<tr>
+<td><strong>Billing admin</strong></td>
+<td>Account</td>
+<td>Chỉ khu vực Billing</td>
+</tr>
+<tr>
+<td><strong>Analyst</strong></td>
+<td>Project</td>
+<td>Toàn quyền IDE + tự cấu hình personal credential; <strong>read-only</strong> environment config; xem job nhưng không sửa</td>
+</tr>
+<tr>
+<td><strong>Developer</strong></td>
+<td>Project</td>
+<td>Tạo/sửa/test code trong IDE; read-only trên environment, job, run, Git config. ⚠️ <strong>Khác</strong> với <em>Developer license</em></td>
+</tr>
+<tr>
+<td><strong>Database admin</strong></td>
+<td>Project</td>
+<td>Write trên <strong>data platform config trong environment</strong> (credential, warehouse, schema) + environment variable + Semantic Layer; read-only trên connection/repo/job</td>
+</tr>
+<tr>
+<td><strong>Git admin</strong></td>
+<td>Project</td>
+<td>Tạo Git integration, tạo environment variable, sửa project settings; <strong>không có IDE</strong>; read-only account settings</td>
+</tr>
+<tr>
+<td><strong>Job admin</strong></td>
+<td>Project</td>
+<td>Tạo/sửa <strong>job, run, environment variable, data warehouse config</strong>; set up project integration; read-only project config</td>
+</tr>
+<tr>
+<td><strong>Job creator</strong></td>
+<td>Project</td>
+<td>Tạo/sửa/chạy job trong project &amp; environment được gán; <strong>không tạo/xóa environment, không sửa env var</strong></td>
+</tr>
+<tr>
+<td><strong>Job runner</strong></td>
+<td>Project</td>
+<td>Chỉ chạy job + xem kết quả</td>
+</tr>
+<tr>
+<td><strong>Job viewer</strong></td>
+<td>Project</td>
+<td>Chỉ đọc kết quả/status/log của job</td>
+</tr>
+<tr>
+<td><strong>Team admin</strong></td>
+<td>Project</td>
+<td>Quản lý project cho một team; read-only nhiều account settings (trừ billing, auth provider). Có thể mở rộng qua <strong>environment-level permission</strong></td>
+</tr>
+<tr>
+<td><strong>Metadata</strong></td>
+<td>Project</td>
+<td>Chỉ read metadata qua <strong>Discovery API</strong></td>
+</tr>
+<tr>
+<td><strong>Notification Manager</strong></td>
+<td>Account</td>
+<td>Quản lý rule notification (Slack/Teams/email) trên <strong>toàn account</strong> mà không cần Account admin; <strong>không</strong> connect/disconnect được Slack/Teams (việc đó chỉ Account admin)</td>
+</tr>
+<tr>
+<td><strong>Semantic Layer</strong></td>
+<td>Project</td>
+<td>Chỉ query Semantic Layer (dùng cho service token)</td>
+</tr>
+<tr>
+<td><strong>Cost Insights Admin / Viewer</strong></td>
+<td>Cả hai</td>
+<td>Cấu hình / xem dữ liệu Cost Insights</td>
+</tr>
+<tr>
+<td><strong>Fusion admin</strong></td>
+<td>—</td>
+<td>Thực hiện Fusion upgrade; <strong>chỉ gán cho user, không gán cho service token</strong></td>
+</tr>
+<tr>
+<td><strong>Analyst read</strong> (private beta)</td>
+<td>Project</td>
+<td>Read-only + <code>user_credential_write</code> để tự quản credential mà không có IDE</td>
+</tr>
+<tr>
+<td><strong>Manage marketplace apps</strong></td>
+<td>Account</td>
+<td>Dành cho marketplace app (Snowflake Native App)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Phân biệt hay bị hỏi: <strong>Git admin</strong> (tạo Git integration + env var, không có IDE) ↔ <strong>Team admin</strong> (quản lý project cho team, read-only phần lớn account settings) ↔ <strong>Job admin</strong> (sửa được cả env var và warehouse config) ↔ <strong>Job creator</strong> (không sửa được env var/environment).</p>
+</blockquote>
+<p><strong>SSO &amp; provisioning</strong></p>
+<ul>
+<li>Hỗ trợ: <strong>SAML 2.0</strong> (generic), <strong>Okta</strong>, <strong>Google Workspace</strong>, <strong>Microsoft Entra ID</strong>; tài liệu migration sang <strong>Auth0</strong>.</li>
+<li><strong>JIT provisioning</strong>: user được tạo trong dbt lần đầu login qua IdP; hỗ trợ <strong>IdP-initiated login</strong>; account có <strong>login slug</strong> riêng, có thể <strong>enforce SSO</strong>.</li>
+<li><strong>SCIM</strong> (Okta, Entra ID): tự động provision/deprovision user và <strong>tự gán license</strong> — đây là đáp án cho bài toán "onboard nhân viên mới tự động nhận license Developer + vào group Analytics".</li>
+<li><strong>License mapping</strong>: map group/attribute từ IdP → license type trong dbt.</li>
+<li><strong>MFA</strong> cấu hình ở phía IdP.</li>
+</ul>
+<p><strong>Token</strong></p>
+<ul>
+<li><strong>Service account token</strong>: thuộc <strong>account</strong>, không thuộc user. Gán được <strong>bất kỳ permission set</strong> nào (Enterprise); phạm vi <strong>toàn bộ project</strong> hoặc <strong>project cụ thể</strong>; gán được nhiều permission set cho 1 token.</li>
+<li>Tạo token cần: <strong>license Developer</strong> + <strong>permission Account admin</strong>.</li>
+<li>Token <strong>chỉ hiện 1 lần</strong> khi tạo → lưu ngay. Rotate định kỳ; sau khi rotate phải verify job vẫn chạy.</li>
+<li>Starter/Developer plan chỉ gán được Semantic Layer; legacy Team plan giới hạn ở Account Admin, Member, Job Admin, Read-Only, Metadata, Semantic Layer.</li>
+<li><strong>Personal access token (PAT)</strong>: thay mặt user, kế thừa quyền của user đó → không dùng cho automation.</li>
+<li><strong>Audit log</strong>: Enterprise, dùng để truy vết thay đổi cấu hình.</li>
+</ul>
+<h3 id="46-monitoring--alerting-topic-6">4.6 Monitoring &amp; alerting (Topic 6)</h3>
+<p><strong>Job notifications</strong></p>
+<ul>
+<li>4 outcome: <strong>Succeeds</strong>, <strong>Warns</strong>, <strong>Fails</strong>, <strong>Is canceled</strong>.</li>
+<li><strong>Warns</strong> được kích hoạt bởi <strong>log level warning từ data test hoặc source freshness</strong>, không phải bởi status tổng thể của run → một job "success" trên UI vẫn có thể bắn notification Warns.</li>
+<li>Channel: <strong>Email</strong>, <strong>Slack (user-linked)</strong>, <strong>Slack (account-level)</strong>, <strong>Microsoft Teams</strong>. Không dùng được Teams native thì gửi qua <strong>email của channel</strong> (external email).</li>
+<li>Quyền: developer user tự set cho mình; cấu hình rộng hơn cần <strong>Account Admin / Owner / Member</strong> hoặc permission set <strong>Notification Manager</strong>.</li>
+</ul>
+<p><strong>Webhooks (outbound, event-driven)</strong></p>
+<ul>
+<li>3 event: <strong><code>job.run.started</code></strong>, <strong><code>job.run.completed</code></strong> (bao gồm cả thành công và thất bại), <strong><code>job.run.errored</code></strong>.</li>
+<li>Tạo qua <strong>UI</strong> hoặc <strong>API</strong>. dbt gửi <strong>JSON payload</strong> tới endpoint URL của bạn.</li>
+<li>dbt <strong>retry 5 lần</strong>; log delivery lưu <strong>7 ngày</strong> (mục <em>Recent Deliveries</em>); <strong>timeout 10 giây</strong> — endpoint trả lời sau 10s sẽ bị coi là fail dù client tự cho là thành công.</li>
+<li>Nên verify payload bằng <strong>HMAC signature</strong> trong header.</li>
+<li>Quyền write webhook (Enterprise): <strong>Account Admin, Admin, hoặc Developer</strong> — giống nhau cho cả UI và service token.</li>
+<li><strong>Webhook vs polling</strong>: cần trigger pipeline ngoài (Airflow…) ngay khi job xong → <strong>webhook <code>job.run.completed</code></strong>, không polling Admin API theo chu kỳ. Job chaining chỉ hoạt động <strong>trong dbt</strong>, không trigger được DAG bên ngoài.</li>
+<li>Ứng dụng thường gặp: mở incident PagerDuty, push Slack/Teams, kick off DAG downstream.</li>
+<li>Giám sát sâu hơn: <strong>Discovery API</strong> (metadata, freshness, test result) + <strong>Administrative API</strong> (run history, trigger).</li>
+<li>Best practice vận hành: routing khác nhau cho prod vs staging; theo dõi trend run duration; job backup trễ 1 tiếng cho pipeline critical.</li>
+</ul>
+<h3 id="47-dbt-mesh--model-governance-topic-7">4.7 dbt Mesh &amp; model governance (Topic 7)</h3>
+<p><strong>Model governance = 3 trụ</strong></p>
+<ol>
+<li><strong><code>access</code></strong> — access modifier trên model:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>access</th>
+<th>Được <code>ref</code> từ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>private</code></td>
+<td>Cùng <strong>group</strong></td>
+</tr>
+<tr>
+<td><code>protected</code></td>
+<td>Cùng <strong>project</strong> (hoặc project cài project đó như package) — <strong>default</strong></td>
+</tr>
+<tr>
+<td><code>public</code></td>
+<td>Bất kỳ group, package, project nào. Sau khi đổi phải <strong>chạy lại job production</strong> để áp dụng</td>
+</tr>
+</tbody>
+</table>
+<ol start="2">
+<li><strong><code>groups</code></strong> — gom model theo owner/domain, mỗi model thuộc <strong>đúng 1 group</strong>, group <strong>không nested</strong>; set được ở mức thư mục trong <code>dbt_project.yml</code>, config trong model sẽ override.</li>
+<li><strong><code>contracts</code></strong> + <strong><code>versions</code></strong> — contract (<code>enforced: true</code> + <code>data_type</code>/constraints) chặn breaking change; versioning (<code>v1</code>, <code>v2</code>, <code>latest_version</code>, <code>deprecation_date</code>) cho phép deprecate có kiểm soát. Coi public model như <strong>API</strong>.</li>
+</ol>
+<blockquote>
+<p>Lưu ý: governance feature chỉ áp dụng cho <strong>model</strong>, không áp dụng cho snapshot, seed, source.</p>
+</blockquote>
+<p><strong>Cross-project reference</strong></p>
+<ul>
+<li>Khai báo trong <strong><code>dependencies.yml</code></strong> (khác <code>packages.yml</code>):
+  <pre><code class="language-yaml">projects:
+  - name: jaffle_finance</code></pre>
+  rồi <code>ref</code> 2 đối số: <code>{{ ref('jaffle_finance', 'fct_orders') }}</code> (có thể kèm version).</li>
+<li><strong>Package</strong> = pull toàn bộ source code vào project mình. <strong>Project dependency</strong> = dbt resolve reference <strong>on-the-fly</strong> qua metadata service; bạn không parse/run model upstream, chỉ tiêu thụ nó như một dataset API.</li>
+</ul>
+<p><strong>Điều kiện bắt buộc để cross-project ref hoạt động (rất hay ra đề)</strong></p>
+<ul>
+<li>Enterprise / Enterprise+.</li>
+<li>Model upstream có <strong><code>access: public</code></strong> và đã có <strong>ít nhất 1 job run thành công sau khi</strong> khai báo access.</li>
+<li>Project upstream có <strong>Production deployment environment</strong> và <strong>≥1 deploy job chạy thành công</strong> ở đó để sinh <strong><code>manifest.json</code></strong>.</li>
+<li>Nếu project upstream có <strong>Staging environment</strong> thì cũng cần ≥1 deploy job thành công ở đó để reference resolve đúng.</li>
+<li><strong>Tên project phải unique trong account</strong> và <strong>case-sensitive</strong> — <code>dbt_project.yml</code> phải khớp chính xác với <code>dependencies.yml</code> (<code>jaffle_marketing</code> ≠ <code>JAFFLE_MARKETING</code>).</li>
+<li>Không tách project theo môi trường (đừng tạo <code>X - Dev</code> và <code>X - Prod</code>); dùng <strong>environment-level isolation</strong> + <strong>Connections</strong>.</li>
+</ul>
+<p><strong>Khác</strong></p>
+<ul>
+<li><strong>Bidirectional dependency ở mức project</strong> là hợp lệ, miễn không tạo cycle ở mức model.</li>
+<li><strong>Cross-platform Mesh</strong>: reference giữa các project nằm trên các data platform khác nhau. Nhưng nếu yêu cầu là <strong>cô lập dữ liệu theo region</strong> thì cross-platform Mesh là lựa chọn <strong>sai</strong>.</li>
+<li><strong>Hybrid Mesh</strong>: kết hợp project dbt Core (self-hosted) với dbt platform.</li>
+</ul>
+<h3 id="48-dbt-catalog-topic-8--trước-đây-tên-là-dbt-explorer">4.8 dbt Catalog (Topic 8) — trước đây tên là dbt Explorer</h3>
+<p><strong>Điều kiện</strong></p>
+<ul>
+<li>Plan Starter / Enterprise / Enterprise+.</li>
+<li>Mỗi project cần <strong>production hoặc staging deployment environment</strong>.</li>
+<li>Cần <strong>≥1 job run thành công</strong> trong environment đó. <strong>CI job không cập nhật Catalog.</strong></li>
+<li>Muốn có docs đầy đủ → bật <strong>Generate docs on run</strong> trong job production.</li>
+</ul>
+<p><strong>Dùng để làm gì</strong></p>
+<ul>
+<li>Xem toàn bộ <strong>resource</strong> (model, test, source, metric, exposure) ở <strong>latest production state</strong>.</li>
+<li><strong>Lineage</strong> cấp model và <strong>column-level lineage</strong>; <strong>project-level lineage</strong> khi dùng Mesh.</li>
+<li>Tra <strong>public model</strong> và <strong>cross-project reference</strong> — nơi team downstream đi tìm "API" để consume.</li>
+<li><strong>Model performance</strong> và <strong>recommendations</strong> → phục vụ tối ưu cost/performance.</li>
+<li>Trạng thái <strong>test</strong>, <strong>source freshness</strong>, <strong>owner/group</strong>, <strong>contract/version</strong>.</li>
+<li>Troubleshoot bằng cách đi lên/xuống lineage thay vì đoán.</li>
+<li>Metadata được surface qua <strong>Discovery API</strong>; có thể <strong>ingest metadata warehouse bên ngoài</strong> để thấy cả asset không định nghĩa trong dbt. Auto-exposure với Tableau.</li>
+</ul>
+<hr />
+<h2 id="5-10-câu-hỏi-mẫu-chính-thức">5. 10 câu hỏi mẫu chính thức</h2>
+<p>Nguồn: <a href="https://www.getdbt.com/certifications/dbt-architect-certification-exam#sample-questions">trang kỳ thi dbt Labs</a> và Study Guide PDF (4 câu đầu). ✅ = đáp án đúng.</p>
+<h3 id="câu-1--kết-nối--xác-thực">Câu 1 — Kết nối &amp; xác thực</h3>
+<p><strong>Vì sao nên tránh dùng connection kiểu SSO cho staging và production deployment environment?</strong></p>
+<ul>
+<li>✅ <strong>A.</strong> Chúng dựa trên session xác thực có thể hết hạn hoặc cần re-authenticate → job trong pipeline tự động sẽ fail bất ngờ.</li>
+<li>B. Không kết nối được cloud warehouse do giao thức xác thực không tương thích.</li>
+<li>C. Chúng chặn khả năng quản lý environment variable cần cho production.</li>
+<li>D. Chỉ user có role Account Admin dùng được.</li>
+</ul>
+<p><strong>Giải thích</strong>: dbt chỉ hỗ trợ OAuth ở <strong>Development environment</strong>. Sau khi user authorize qua IdP, dbt nhận access token để mở connection và chạy query trong Studio. <strong>Thời hạn token do data platform quyết định</strong>; hết hạn thì user phải authorize lại. Vì vậy deployment credential nên là <strong>service account</strong>. B sai vì kỹ thuật vẫn kết nối được, chỉ là không nên nên dbt không cho phép. C sai vì cách xác thực không liên quan tới env var. D sai vì bất kỳ user có <strong>Developer license</strong> đều dùng được SSO OAuth, bất kể permission.</p>
+<h3 id="câu-2--phân-quyền-theo-environment">Câu 2 — Phân quyền theo environment</h3>
+<p><strong>Snapshot có <code>target_schema</code> = <code>prod_snapshot</code>. Muốn developer <em>read</em> được <code>prod_schema</code> ở dev nhưng job production có <em>read + write</em>. Làm thế nào?</strong></p>
+<ul>
+<li>A. Dùng <code>post-hook</code> để grant quyền trong snapshot config.</li>
+<li>✅ <strong>B.</strong> Dùng <strong>service account có read + write</strong> trong setting của deployment environment.</li>
+<li>C. Dùng <code>on-run-end</code> để grant quyền trong snapshot config.</li>
+<li>D. Gán developer role <strong>Job Admin</strong>.</li>
+</ul>
+<p><strong>Giải thích</strong>: Bản chất là user/service account khác nhau phải có quyền khác nhau trên object khác nhau. Developer: read <code>prod_schema</code>, không write <code>prod_snapshot</code>. Credential deployment production: read + write cả hai. Giải pháp gọn là <strong>credential riêng cho từng environment</strong> + grant tương ứng trong data platform. A và C sai vì credential production cần quyền write <strong>trước</strong> khi tạo/alter table trong <code>prod_snapshot</code> — grant sau đó không giải quyết được yêu cầu. D sai vì <strong>Job Admin</strong> cho phép tạo/sửa job, run, env var, warehouse config nhưng <strong>không</strong> ảnh hưởng tới quyền cá nhân của user trên object trong database.</p>
+<h3 id="câu-3--precedence-của-environment-variable">Câu 3 — Precedence của environment variable</h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Project Default</th>
+<th>Production</th>
+<th>Development</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DBT_ENV_VALUE</code></td>
+<td><code>not_set</code></td>
+<td><code>prod</code></td>
+<td><code>dev</code></td>
+</tr>
+</tbody>
+</table>
+<p>Trong job có override biến này thành <code>finance</code>. <strong>Nếu xóa cấu hình job-level, giá trị nào được dùng?</strong></p>
+<ul>
+<li>A. Project default <code>not_set</code></li>
+<li>B. <code>default</code> argument của hàm Jinja <code>env_var</code> trong code</li>
+<li>✅ <strong>C.</strong> Giá trị gán ở <strong>environment</strong> mà job đó chạy</li>
+<li>D. Env var ở job level là bắt buộc, không xóa được</li>
+</ul>
+<p><strong>Giải thích</strong>: Project Default dùng làm catch-all/token chung toàn project. Giá trị ở <strong>environment level cao hơn project default</strong>. Job <strong>kế thừa</strong> giá trị environment, job-level override thắng khi tồn tại; xóa override → fallback về environment (ở đây là <code>prod</code>). A sai vì Project Default thấp hơn environment. B sai vì <code>default</code> argument của Jinja thấp hơn cả Project Default và environment. D sai vì override job-level không bắt buộc.</p>
+<h3 id="câu-4--environment-variables-chọn-2">Câu 4 — Environment variables (chọn 2)</h3>
+<p><strong>Điều nào đúng về environment variables?</strong></p>
+<ul>
+<li>✅ Env var trong dbt phải có prefix <strong><code>DBT_</code></strong>, <strong><code>DBT_ENV_SECRET_</code></strong> hoặc <strong><code>DBT_ENV_CUSTOM_ENV_</code></strong>.</li>
+<li>✗ Prefix là <code>DBT_</code>, <code>DBT_SECRET_ENV</code> hoặc <code>DBT_CUSTOM_ENV_</code>.</li>
+<li>✗ Key của env var <strong>không phân biệt</strong> chữ hoa/thường.</li>
+<li>✗ dbt có sẵn một số biến pre-defined <strong>có thể</strong> ghi đè.</li>
+<li>✅ dbt có sẵn một số biến pre-defined <strong>không thể</strong> ghi đè.</li>
+<li>✗ Environment variable và project variable là như nhau.</li>
+</ul>
+<p><strong>Giải thích</strong>: dbt bắt buộc các prefix này để phân tách mối quan tâm — dbt không thể quét mọi env var của hệ thống nên dùng namespace để biết biến nào "opt-in" cho việc redact, thu metadata hay dùng chung. Key được uppercase theo quy ước để tránh nhập nhằng.</p>
+<h3 id="câu-5--schema-theo-environment-chọn-2">Câu 5 — Schema theo environment (chọn 2)</h3>
+<p><strong>Muốn object materialize vào schema khác nhau cho mỗi deployment environment. Cách nào?</strong></p>
+<ul>
+<li>✗ Định nghĩa <code>custom_schema</code> trong config block của từng model.</li>
+<li>✅ <strong>Đặt target schema khi cấu hình environment.</strong></li>
+<li>✅ <strong>Dùng/override macro <code>generate_schema_name</code>.</strong></li>
+<li>✗ Đặt target schema trong job settings.</li>
+<li>✗ Dùng macro <code>handle_existing_table</code>.</li>
+</ul>
+<p><strong>Giải thích</strong>: dbt resolve schema bằng cách kết hợp <strong>target schema</strong> với logic custom schema. Target schema theo environment là cơ chế chính (dev/staging/prod mỗi cái một schema). Override <code>generate_schema_name</code> cho phép tùy biến hoàn toàn logic đó. <code>custom_schema</code> ở model config chỉ tạo suffix, tự nó không đổi theo environment. Target schema ở job level ghi đè environment nhưng là chuyện của job, không phải của environment. <code>handle_existing_table</code> <strong>không phải macro thật</strong> của dbt — đây là distractor.</p>
+<h3 id="câu-6--deferral">Câu 6 — Deferral</h3>
+<p><strong>Team có production deployment environment, muốn developer chạy <code>dbt build --select state:modified+</code> đối chiếu state production — chỉ build model đã đổi, không build lại upstream không đổi. Architect cần cấu hình gì?</strong></p>
+<ul>
+<li>✗ Clone schema production sang schema riêng của developer bằng post-hook.</li>
+<li>✅ <strong>Bật deferral trên development environment, trỏ tới production làm deferred environment.</strong></li>
+<li>✗ Set custom branch trên production environment cho developer target vào.</li>
+<li>✗ Dùng env var override trên job của từng developer để trỏ schema prod.</li>
+</ul>
+<p><strong>Giải thích</strong>: Deferral cho phép dbt resolve các model không đổi từ <strong>manifest của production environment</strong>, nên developer chỉ build model đã đổi và các dependent phía dưới.</p>
+<h3 id="câu-7--ci-job">Câu 7 — CI job</h3>
+<p><strong>Khi PR được mở, dbt cần chỉ chạy model đã đổi + downstream, và so sánh với state production thay vì build lại toàn bộ. Cấu hình job nào?</strong></p>
+<ul>
+<li>✗ Scheduled job với <code>dbt build --select state:modified+</code> và bật self-deferral.</li>
+<li>✅ <strong>CI job có deferral trỏ tới production environment, command <code>dbt build --select state:modified+</code>.</strong></li>
+<li>✗ Merge job chạy <code>dbt run --full-refresh</code> mỗi PR.</li>
+<li>✗ Triggered job qua webhook chỉ chạy <code>dbt test</code>.</li>
+</ul>
+<p><strong>Giải thích</strong>: <strong>CI job</strong> là loại job được thiết kế cho trigger từ pull request; cấu hình deferral tới production đảm bảo job chỉ build model đã thay đổi, so sánh với manifest production.</p>
+<h3 id="câu-8--sso--scim--rbac">Câu 8 — SSO / SCIM / RBAC</h3>
+<p><strong>Tổ chức dùng Okta làm IdP. Muốn nhân viên mới login qua SSO </strong>tự động<strong> nhận license "Developer" và vào group "Analytics" mà không cần can thiệp thủ công.</strong></p>
+<ul>
+<li>✗ Tạo service token role Developer rồi chia sẻ cho nhân viên mới.</li>
+<li>✅ <strong>Thiết lập SCIM provisioning + cấu hình license mapping và RBAC group assignment gắn với attribute của Okta.</strong></li>
+<li>✗ Yêu cầu user tự đăng ký rồi gửi request xin license.</li>
+<li>✗ Đặt default license của account là Developer để mọi user SSO tự kế thừa, không cần RBAC.</li>
+</ul>
+<p><strong>Giải thích</strong>: <strong>SCIM</strong> xử lý provisioning/deprovisioning tự động; kết hợp <strong>license mapping</strong> và <strong>RBAC rule</strong> đảm bảo user nhận đúng license và đúng group dựa trên attribute Okta.</p>
+<h3 id="câu-9--dbt-mesh">Câu 9 — dbt Mesh</h3>
+<p><strong>Project downstream cần <code>ref</code> một model của project upstream trong dbt Mesh. Model upstream đang là <code>access: protected</code>. Chủ project upstream phải đổi gì?</strong></p>
+<ul>
+<li>✗ Set <code>access: public</code> và khai báo nó trong <code>sources.yml</code> của project upstream.</li>
+<li>✅ <strong>Set <code>access: public</code> và đảm bảo environment upstream được cấu hình là environment type Production.</strong></li>
+<li>✗ Set <code>access: private</code> và thêm project downstream vào allowlist.</li>
+<li>✗ Không cần đổi gì — mọi model đều ref được cross-project bất kể access level.</li>
+</ul>
+<p><strong>Giải thích</strong>: Cross-project reference trong Mesh yêu cầu model có <strong><code>access: public</code></strong>. Environment upstream cũng phải là <strong>environment type production</strong> để dbt resolve được cross-project ref lúc runtime.</p>
+<h3 id="câu-10--webhooks-vs-polling">Câu 10 — Webhooks vs polling</h3>
+<p><strong>Muốn trigger pipeline downstream ở orchestration tool bên ngoài (ví dụ Airflow) ngay khi job dbt thành công, mà không polling dbt API theo schedule. Cách khuyến nghị?</strong></p>
+<ul>
+<li>✗ Bật email notification rồi để Airflow parse inbox.</li>
+<li>✗ Dùng dbt API poll status job mỗi 60 giây từ Airflow.</li>
+<li>✅ <strong>Cấu hình webhook trên job dbt để gửi event <code>job.completed</code> tới REST API endpoint của Airflow.</strong></li>
+<li>✗ Dùng job chaining trong dbt để trigger Airflow DAG như một job step cuối.</li>
+</ul>
+<p><strong>Giải thích</strong>: Webhook là cơ chế integration event-driven của dbt. Cấu hình webhook cho event job completed sẽ <strong>push</strong> notification tới endpoint bên ngoài ngay khi job kết thúc, loại bỏ nhu cầu polling.</p>
+<hr />
+<h2 id="6-những-vùng-dễ-mất-điểm-nhất">6. Những vùng dễ mất điểm nhất</h2>
+<p>Tổng hợp từ chia sẻ của người đã thi đạt (<a href="https://nikitavolynets.substack.com/p/how-to-pass-dbt-cloud-architect-exam">Nikita Volynets</a>, <a href="https://www.thedataschool.co.uk/daniel-bostrom/dbt-architect-certification">Daniel Bostrom</a>) — nội dung đã diễn giải lại:</p>
+<ol>
+<li><strong>Permissions.</strong> Câu hỏi rất nhiều và rất chi tiết. Phải phân biệt được <strong>Git Admin vs Team Admin vs Job Admin vs Job Creator</strong>, và biết set nào là <strong>account-level</strong> vs <strong>project-level</strong>. Học kỹ trang <a href="https://docs.getdbt.com/docs/cloud/manage-access/enterprise-permissions">Enterprise permissions</a>.</li>
+<li><strong>Job configuration &amp; source freshness.</strong> Đề hỏi sâu hơn mức mà learning path dạy — nhất là <strong>source freshness</strong> và <strong>docs on run</strong> hoạt động thế nào khi bật, cùng khác biệt giữa <strong>CI job và production job</strong>.</li>
+<li><strong>Environments &amp; defer.</strong> <code>defer</code> dùng environment nào, khác biệt dev/staging/prod và cách chúng tương tác. Nhớ cả <strong>self-deferral</strong> và khi nào chọn cái nào.</li>
+<li><strong>Advanced CI.</strong> "Compare changes" so sánh <strong>cái gì với cái gì</strong>, output ra đâu, giới hạn ra sao.</li>
+<li><strong>dbt Mesh.</strong> Bidirectional dependency, các bước thiết lập, cấu hình job xuyên project, environment giữa các project tương tác thế nào. Đây là phần khó nếu chưa từng làm tay.</li>
+<li><strong>Hooks.</strong> Không nằm trong study guide nhưng xuất hiện trong câu hỏi mẫu chính thức (câu 2) — đọc <code>pre-hook</code>/<code>post-hook</code>/<code>on-run-start</code>/<code>on-run-end</code>.</li>
+<li>Learning path chỉ dạy <strong>core concept</strong>; đề thi hỏi mức <strong>chi tiết của docs</strong>. Ví dụ: path dạy best practice về RBAC, nhưng đề hỏi <strong>tên chính xác của permission set</strong>. → Bắt buộc đọc các trang docs được link trong study guide.</li>
+</ol>
+<hr />
+<h2 id="7-kế-hoạch-ôn-46-tuần">7. Kế hoạch ôn 4–6 tuần</h2>
+<table>
+<thead>
+<tr>
+<th>Tuần</th>
+<th>Việc cần làm</th>
+<th>Deliverable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Hoàn thành <strong>dbt Fundamentals</strong>. Đọc study guide PDF từ đầu đến cuối. Dựng sandbox dbt (trial/dev account) để phá thoải mái</td>
+<td>Danh sách điểm yếu của bản thân</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Milestone #1: connections, OAuth, IP restriction, kết nối Git 3 provider. Đọc docs: About data platform connections, Access/Regions/IP, Set up Snowflake/Databricks/BigQuery/external OAuth</td>
+<td>Project kết nối xong, biết diễn giải pattern auth cho từng environment</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Milestone #2 phần environment: tạo dev/staging/prod, custom branch, env var 4 tầng precedence, custom schema/target. Khóa <strong>dbt Environments</strong></td>
+<td>3 environment chạy được + tài liệu branch strategy</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Milestone #2 phần job: khóa <strong>Advanced Deployment (4h)</strong>, deploy job, cron, job chaining, CI job, deferral, self-deferral, Advanced CI, threads</td>
+<td>Runbook mô tả job chaining + cách defer hoạt động</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Milestone #3: license &amp; permission set (học bảng thuộc lòng), SSO, SCIM, license mapping, service token + rotate, notification, webhook</td>
+<td>Checklist audit RBAC/token; 1 webhook bắn khi job fail</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Milestone #4: dựng Mesh 2 project (producer/consumer), <code>access: public</code>, <code>dependencies.yml</code>, contract + version; bật generate docs, khám phá Catalog + column-level lineage</td>
+<td>Lineage xuyên 2 project trong Catalog</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Ôn lại 8 topic, làm 10 câu mẫu có bấm thời gian, xem 🎥 <a href="https://learn.getdbt.com/courses/pro-tips-for-dbt-certifications">Pro Tips for dbt Certifications</a>. Diễn tập sự cố: xoay token/phá environment rồi phục hồi trong 15 phút. Đăng ký thi trên Talview + system check</td>
+<td>Lịch thi đã book</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Mẹo học chủ động</strong>: nạp các link trong study guide vào NotebookLM (hoặc công cụ tương tự) và bắt nó quiz bạn. Câu hỏi sẽ dễ hơn đề thật, nhưng rất hiệu quả để lộ ra lỗ hổng. Cách khác: đọc từng trang docs rồi <strong>viết lại bằng lời của mình</strong> — hiệu quả hơn hẳn chỉ đọc.</p>
+<h3 id="checklist-tuần-cuối">Checklist tuần cuối</h3>
+<ul>
+<li>[ ] Phân biệt được <strong>defer</strong> và <strong>self-deferral</strong>, biết khi nào dùng cái nào</li>
+<li>[ ] Giải thích được <strong>Advanced CI</strong> so sánh gì, cần điều kiện gì (Enterprise, <code>dbt compare</code>, primary key/uniqueness test)</li>
+<li>[ ] Nhớ chính xác 3 prefix env var và <strong>thứ tự precedence 4 tầng</strong></li>
+<li>[ ] Nhớ 3 event webhook, retry 5 lần, log 7 ngày, timeout 10s</li>
+<li>[ ] Nhớ 4 outcome notification và Warns đến từ đâu</li>
+<li>[ ] Đọc thuộc bảng permission set, phân biệt account-level vs project-level</li>
+<li>[ ] Biết <strong>license override group permission</strong></li>
+<li>[ ] Tạo được và rotate được service token, verify job vẫn chạy sau khi rotate</li>
+<li>[ ] Cấu hình được RBAC cho team mới + map SSO group → role (SCIM)</li>
+<li>[ ] Publish được model cross-project và xác nhận lineage trong Catalog (nhớ 3 điều kiện: <code>access: public</code>, production env, ≥1 job run thành công)</li>
+<li>[ ] Nhớ <strong>Catalog không được cập nhật bởi CI job</strong></li>
+<li>[ ] Nhớ <strong>OAuth chỉ cho development</strong>, deployment dùng service account</li>
+<li>[ ] Nhớ <strong>PrivateLink = Business Critical</strong>, IP restriction = Enterprise+</li>
+<li>[ ] Giải thích được branching strategy và branch protection của mình</li>
+<li>[ ] Làm 10 câu mẫu có bấm giờ (&lt; 2 phút/câu)</li>
+<li>[ ] Đã book Talview, chạy system check, chuẩn bị phòng yên tĩnh + phương án dự phòng điện/internet</li>
+</ul>
+<hr />
+<h2 id="8-nguồn-tham-khảo">8. Nguồn tham khảo</h2>
+<p><strong>Chính thức dbt Labs</strong></p>
+<ul>
+<li><a href="https://learn.getdbt.com/learn/learning-path/dbt-certified-cloud-architect">dbt Certified Architect Path (learning path đầy đủ)</a></li>
+<li><a href="https://www.getdbt.com/certifications/dbt-architect-certification-exam">Trang kỳ thi + 10 câu mẫu</a></li>
+<li><a href="https://www.getdbt.com/dbt-assets/dbt-certificate-study-guide-for-cloud-architect">Study Guide PDF (v6.3)</a></li>
+<li><a href="https://www.getdbt.com/blog/introducing-the-new-cloud-architect-certification">Blog ra mắt chứng chỉ</a></li>
+<li><a href="https://pages.talview.com/dbtlabs/certifications/">Đăng ký thi — Talview</a> · Email: <code>certification@dbtlabs.com</code></li>
+<li><a href="https://learn.getdbt.com/catalog">Course Catalog dbt Learn</a></li>
+</ul>
+<p><strong>Docs cần đọc (theo study guide)</strong></p>
+<ul>
+<li>Connections: <a href="https://docs.getdbt.com/docs/cloud/connect-data-platform/about-connections">About data platform connections</a> · <a href="https://docs.getdbt.com/docs/cloud/about-cloud/access-regions-ip-addresses">Access, Regions &amp; IP addresses</a> · <a href="https://docs.getdbt.com/docs/cloud/secure/ip-restrictions">IP restrictions</a></li>
+<li>Git: <a href="https://docs.getdbt.com/docs/cloud/git/connect-github">Connect to GitHub</a> · <a href="https://docs.getdbt.com/docs/cloud/git/connect-gitlab">GitLab</a> · <a href="https://docs.getdbt.com/docs/cloud/git/connect-azure-devops">Azure DevOps</a> · <a href="https://docs.getdbt.com/docs/cloud/git/import-a-project-by-git-url">Git clone</a></li>
+<li>Environments: <a href="https://docs.getdbt.com/docs/deploy/deploy-environments">Deployment environments</a> · <a href="https://docs.getdbt.com/docs/build/environment-variables">Environment variables</a> · <a href="https://docs.getdbt.com/docs/build/custom-schemas">Custom schemas</a> · <a href="https://docs.getdbt.com/reference/node-selection/defer">Defer</a> · <a href="https://docs.getdbt.com/docs/running-a-dbt-project/using-threads">Using threads</a></li>
+<li>Jobs/CI: <a href="https://docs.getdbt.com/docs/deploy/deploy-jobs">Deploy jobs</a> · <a href="https://docs.getdbt.com/docs/deploy/ci-jobs">CI jobs</a> · <a href="https://docs.getdbt.com/docs/deploy/advanced-ci">Advanced CI</a> · <a href="https://docs.getdbt.com/docs/deploy/job-scheduler">Job scheduler</a> · <a href="https://docs.getdbt.com/docs/deploy/merge-jobs">Merge jobs</a> · <a href="https://docs.getdbt.com/docs/deploy/source-freshness">Source freshness</a> · <a href="https://docs.getdbt.com/docs/build/hooks-operations">Hooks</a></li>
+<li>Security: <a href="https://docs.getdbt.com/docs/cloud/manage-access/enterprise-permissions">Enterprise permissions</a> · <a href="https://docs.getdbt.com/docs/cloud/manage-access/about-user-access">About user access</a> · <a href="https://docs.getdbt.com/docs/cloud/manage-access/seats-and-users">Users and licenses</a> · <a href="https://docs.getdbt.com/docs/dbt-cloud-apis/service-tokens">Service account tokens</a> · <a href="https://docs.getdbt.com/docs/cloud/manage-access/sso-overview">SSO overview</a> · <a href="https://docs.getdbt.com/docs/platform/manage-access/scim">SCIM</a> (<a href="https://docs.getdbt.com/docs/platform/manage-access/scim-okta">Okta</a> · <a href="https://docs.getdbt.com/docs/platform/manage-access/scim-entra-id">Entra ID</a> · <a href="https://docs.getdbt.com/docs/platform/manage-access/scim-manage-user-licenses">quản lý license qua SCIM</a>)</li>
+<li>Monitoring: <a href="https://docs.getdbt.com/docs/deploy/job-notifications">Job notifications</a> · <a href="https://docs.getdbt.com/docs/deploy/webhooks">Webhooks</a></li>
+<li>Governance: <a href="https://docs.getdbt.com/best-practices/how-we-mesh/mesh-1-intro">Intro to dbt Mesh</a> · <a href="https://docs.getdbt.com/docs/collaborate/govern/project-dependencies">Project dependencies</a> · <a href="https://docs.getdbt.com/docs/collaborate/govern/model-access">Model access</a> · <a href="https://docs.getdbt.com/docs/collaborate/govern/model-contracts">Model contracts</a> · <a href="https://docs.getdbt.com/docs/collaborate/govern/model-versions">Model versions</a> · <a href="https://docs.getdbt.com/docs/collaborate/explore-projects">Discover data with Catalog</a> · <a href="https://docs.getdbt.com/guides/mesh-qs">Quickstart with dbt Mesh</a></li>
+</ul>
+<p><strong>Kinh nghiệm cộng đồng</strong></p>
+<ul>
+<li><a href="https://nikitavolynets.substack.com/p/how-to-pass-dbt-cloud-architect-exam">How to pass dbt Cloud Architect exam — Nikita Volynets</a></li>
+<li><a href="https://www.thedataschool.co.uk/daniel-bostrom/dbt-architect-certification">dbt Architect Certification — Daniel Bostrom, The Data School</a></li>
+<li><a href="https://flashgenius.net/blog-article/dbt-architect-certification-the-complete-2025-study-guide">dbt Architect Certification: Complete 2025 Study Guide — FlashGenius</a></li>
+<li>dbt Slack: <code>#dbt-certification</code>, <code>#learn-on-demand</code>, <code>#advice-dbt-for-power-users</code>, <code>#dbt-deployment-and-orchestration</code></li>
+</ul>
+<blockquote>
+<p><em>Content was rephrased for compliance with licensing restrictions.</em></p>
+</blockquote>
+    </article>
+  </main>
+</div>
+
+<button class="btn" id="top" aria-label="Lên đầu trang">↑</button>
+<script>
+(function(){
+  var article = document.querySelector('article');
+
+  /* ---- wrap tables for horizontal scroll ---- */
+  article.querySelectorAll('table').forEach(function(t){
+    var w = document.createElement('div'); w.className = 'tablewrap';
+    t.parentNode.insertBefore(w, t); w.appendChild(t);
+  });
+
+  /* ---- style the in-document table of contents (first ol after 'Mục lục') ---- */
+  var h2s = article.querySelectorAll('h2');
+  for (var i=0;i<h2s.length;i++){
+    if (/mục lục/i.test(h2s[i].textContent)){
+      var n = h2s[i].nextElementSibling;
+      if (n && n.tagName === 'OL'){ var box=document.createElement('div'); box.className='doc-toc';
+        n.parentNode.insertBefore(box,n); box.appendChild(n); }
+      break;
+    }
+  }
+
+  /* ---- heading anchors ---- */
+  article.querySelectorAll('h2[id],h3[id],h4[id]').forEach(function(h){
+    var a = document.createElement('a');
+    a.className='anchor'; a.href='#'+h.id; a.textContent='#'; a.setAttribute('aria-label','Link tới mục này');
+    h.appendChild(a);
+  });
+
+  /* ---- task list checkboxes with persistence ---- */
+  var storeKey = 'dbt-arch-cert-checks';
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(storeKey) || '{}'); } catch(e){}
+  var taskIdx = 0;
+  article.querySelectorAll('li').forEach(function(li){
+    var m = li.firstChild;
+    var raw = li.textContent || '';
+    if (!/^\s*\[( |x|X)\]\s/.test(raw)) return;
+    var checked = /^\s*\[(x|X)\]/.test(raw);
+    var html = li.innerHTML.replace(/^\s*\[(\s|x|X)\]\s*/, '');
+    var id = 'task-' + (taskIdx++);
+    li.className = 'task';
+    li.innerHTML = '<input type="checkbox" id="'+id+'"><span>'+html+'</span>';
+    var box = li.querySelector('input');
+    box.checked = (saved[id] !== undefined) ? !!saved[id] : checked;
+    li.classList.toggle('done', box.checked);
+    box.addEventListener('change', function(){
+      li.classList.toggle('done', box.checked);
+      saved[id] = box.checked;
+      try { localStorage.setItem(storeKey, JSON.stringify(saved)); } catch(e){}
+    });
+  });
+
+  /* ---- sidebar TOC ---- */
+  var nav = document.getElementById('toc');
+  var heads = [].slice.call(article.querySelectorAll('h2[id],h3[id]'));
+  heads = heads.filter(function(h){ return !/mục lục/i.test(h.textContent); });
+  heads.forEach(function(h){
+    var a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.className = h.tagName === 'H3' ? 'lvl3' : 'lvl2';
+    a.textContent = h.textContent.replace(/#$/,'').trim();
+    a.dataset.q = a.textContent.toLowerCase();
+    nav.appendChild(a);
+  });
+  var nores = document.createElement('div');
+  nores.className='nores'; nores.textContent='Không tìm thấy mục nào.';
+  nav.appendChild(nores);
+  var links = [].slice.call(nav.querySelectorAll('a'));
+
+  /* ---- active link on scroll ---- */
+  var current = null;
+  function onScroll(){
+    var y = window.scrollY + 90, active = heads[0];
+    for (var i=0;i<heads.length;i++){ if (heads[i].offsetTop <= y) active = heads[i]; }
+    if (active && active !== current){
+      current = active;
+      links.forEach(function(l){ l.classList.toggle('active', l.getAttribute('href') === '#'+active.id); });
+      var act = nav.querySelector('a.active');
+      if (act){
+        var top = act.offsetTop, h = nav.clientHeight;
+        if (top < nav.scrollTop + 40 || top > nav.scrollTop + h - 60) nav.scrollTop = top - h/2;
+      }
+    }
+    var doc = document.documentElement;
+    var max = doc.scrollHeight - doc.clientHeight;
+    document.getElementById('progress').style.width = (max>0 ? (window.scrollY/max*100) : 0) + '%';
+    document.getElementById('top').classList.toggle('show', window.scrollY > 500);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  onScroll();
+
+  /* ---- filter TOC + highlight body ---- */
+  var input = document.getElementById('search');
+  function clearMarks(){
+    article.querySelectorAll('mark.hit').forEach(function(m){
+      var p = m.parentNode; p.replaceChild(document.createTextNode(m.textContent), m); p.normalize();
+    });
+  }
+  function highlight(q){
+    if (q.length < 3) return;
+    var re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
+    var walker = document.createTreeWalker(article, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentNode.nodeName;
+        if (p === 'SCRIPT' || p === 'STYLE' || p === 'MARK') return NodeFilter.FILTER_REJECT;
+        return re.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+    var nodes = [], n;
+    while ((n = walker.nextNode())) nodes.push(n);
+    nodes.slice(0, 600).forEach(function(node){
+      var frag = document.createDocumentFragment(), last = 0, txt = node.nodeValue, mm;
+      re.lastIndex = 0;
+      while ((mm = re.exec(txt))){
+        frag.appendChild(document.createTextNode(txt.slice(last, mm.index)));
+        var mk = document.createElement('mark'); mk.className='hit'; mk.textContent = mm[0];
+        frag.appendChild(mk); last = mm.index + mm[0].length;
+        if (mm[0].length === 0) break;
+      }
+      frag.appendChild(document.createTextNode(txt.slice(last)));
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+  var timer;
+  input.addEventListener('input', function(){
+    var q = input.value.trim().toLowerCase();
+    var shown = 0;
+    links.forEach(function(l){
+      var hit = !q || l.dataset.q.indexOf(q) > -1;
+      l.classList.toggle('hidden', !hit);
+      if (hit) shown++;
+    });
+    nores.style.display = (q && shown === 0) ? 'block' : 'none';
+    clearTimeout(timer);
+    timer = setTimeout(function(){ clearMarks(); if (q) highlight(q); }, 220);
+  });
+  input.addEventListener('keydown', function(e){
+    if (e.key === 'Escape'){ input.value=''; input.dispatchEvent(new Event('input')); input.blur(); }
+    if (e.key === 'Enter'){
+      var first = links.find(function(l){ return !l.classList.contains('hidden'); });
+      if (first) first.click();
+    }
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === '/' && document.activeElement !== input){ e.preventDefault(); input.focus(); }
+  });
+
+  /* ---- theme ---- */
+  var root = document.documentElement, tBtn = document.getElementById('themeBtn');
+  function setTheme(t){
+    root.setAttribute('data-theme', t);
+    tBtn.textContent = t === 'dark' ? '☀︎ Sáng' : '☾ Tối';
+    try { localStorage.setItem('dbt-arch-cert-theme', t); } catch(e){}
+  }
+  var pref = null;
+  try { pref = localStorage.getItem('dbt-arch-cert-theme'); } catch(e){}
+  setTheme(pref || 'dark');
+  tBtn.addEventListener('click', function(){
+    setTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  /* ---- mobile nav ---- */
+  var mBtn = document.getElementById('menuBtn'), scrim = document.querySelector('.scrim');
+  function closeNav(){ document.body.classList.remove('nav-open'); }
+  mBtn.addEventListener('click', function(){ document.body.classList.toggle('nav-open'); });
+  scrim.addEventListener('click', closeNav);
+  nav.addEventListener('click', function(e){ if (e.target.tagName === 'A') closeNav(); });
+
+  document.getElementById('top').addEventListener('click', function(){
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+})();
+</script>
+</body>
+</html>
