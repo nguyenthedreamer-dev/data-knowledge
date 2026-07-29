@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đoàn Trung Nguyên — Analytics Engineer</title>
+<style>
+  :root{
+    --bg:#0b1220;
+    --bg-soft:#111b2e;
+    --card:#16223a;
+    --line:#25344f;
+    --txt:#e8eefb;
+    --muted:#9db0d0;
+    --accent:#4cc9f0;
+    --accent-2:#ffb703;
+    --accent-3:#7ee787;
+    --radius:16px;
+    --pad:clamp(24px,4vw,64px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:"Inter","Segoe UI",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+    background:var(--bg);
+    color:var(--txt);
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- deck / slides ---------- */
+  .deck{position:relative;height:100vh;width:100vw}
+  .slide{
+    position:absolute;inset:0;
+    display:none;
+    flex-direction:column;
+    justify-content:center;
+    padding:var(--pad) var(--pad) calc(var(--pad) + 34px);
+    background:
+      radial-gradient(1100px 600px at 88% -12%, rgba(76,201,240,.16), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(255,183,3,.12), transparent 60%),
+      var(--bg);
+  }
+  .slide.active{display:flex;animation:in .38s ease both}
+  @keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  .eyebrow{
+    font-size:clamp(11px,1vw,13px);
+    letter-spacing:.22em;text-transform:uppercase;
+    color:var(--accent);font-weight:700;margin-bottom:14px;
+  }
+  h1{font-size:clamp(38px,6.4vw,88px);line-height:1.02;letter-spacing:-.02em;font-weight:800}
+  h2{font-size:clamp(26px,3.6vw,48px);line-height:1.1;letter-spacing:-.01em;font-weight:750;margin-bottom:8px}
+  h3{font-size:clamp(16px,1.5vw,21px);font-weight:700;margin-bottom:6px}
+  p,li{font-size:clamp(14px,1.25vw,19px);line-height:1.6;color:var(--muted)}
+  strong{color:var(--txt);font-weight:650}
+  .lead{max-width:60ch;margin-top:14px}
+  .sub{color:var(--muted);font-size:clamp(15px,1.7vw,24px);margin-top:18px;max-width:62ch;line-height:1.5}
+
+  .rule{height:4px;width:74px;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent-2));margin:18px 0 26px}
+
+  /* ---------- title slide ---------- */
+  .title-name{background:linear-gradient(120deg,#fff 20%,var(--accent) 75%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .role{font-size:clamp(18px,2.4vw,32px);font-weight:650;color:var(--txt);margin-top:14px}
+  .role span{color:var(--accent-2)}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;
+    border:1px solid var(--line);background:rgba(255,255,255,.03);
+    padding:9px 15px;border-radius:99px;font-size:clamp(12px,1.05vw,15px);color:var(--txt);
+  }
+  .chip b{color:var(--accent);font-weight:700}
+  .credo{margin-top:34px;font-style:italic;color:var(--accent-2);font-size:clamp(14px,1.3vw,19px)}
+
+  /* ---------- layout helpers ---------- */
+  .grid{display:grid;gap:clamp(12px,1.4vw,20px);margin-top:8px}
+  .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .split{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(20px,3vw,46px);align-items:center}
+  .scroll{overflow:auto;max-height:100%}
+
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:clamp(14px,1.5vw,22px);position:relative;overflow:hidden;
+  }
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);opacity:.85}
+  .card.b::before{background:var(--accent-2)}
+  .card.c::before{background:var(--accent-3)}
+  .card .ico{font-size:clamp(18px,1.7vw,24px);margin-bottom:8px;display:block}
+  .card p{font-size:clamp(13px,1.05vw,16px)}
+
+  .stat{text-align:center;padding:clamp(14px,1.6vw,24px);border:1px solid var(--line);border-radius:var(--radius);background:rgba(255,255,255,.02)}
+  .stat b{display:block;font-size:clamp(26px,3.4vw,46px);font-weight:800;color:var(--accent);line-height:1}
+  .stat span{display:block;margin-top:8px;font-size:clamp(11px,.95vw,14px);color:var(--muted);letter-spacing:.04em}
+
+  ul.ticks{list-style:none;display:flex;flex-direction:column;gap:11px;margin-top:6px}
+  ul.ticks li{position:relative;padding-left:30px}
+  ul.ticks li::before{
+    content:"";position:absolute;left:6px;top:.62em;width:8px;height:8px;border-radius:2px;
+    background:var(--accent);transform:rotate(45deg);
+  }
+
+  /* ---------- flow diagram ---------- */
+  .flow-cap{font-size:clamp(10px,.85vw,12px);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:clamp(14px,1.8vw,22px) 0 2px}
+  .flow{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .node{
+    flex:1 1 130px;border:1px solid var(--line);border-radius:12px;padding:14px 12px;text-align:center;
+    background:rgba(255,255,255,.02);
+  }
+  .node small{display:block;font-size:clamp(10px,.8vw,12px);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .node b{font-size:clamp(13px,1.1vw,17px);font-weight:700}
+  .node.me{border-color:var(--accent);background:rgba(76,201,240,.12);box-shadow:0 0 0 3px rgba(76,201,240,.08)}
+  .node.me b{color:var(--accent)}
+  .arrow{display:flex;align-items:center;color:var(--line);font-size:22px}
+
+  /* ---------- timeline ---------- */
+  .tl{display:flex;flex-direction:column;gap:clamp(10px,1.2vw,16px);margin-top:6px}
+  .tl-item{display:grid;grid-template-columns:clamp(120px,15vw,190px) 1fr;gap:clamp(12px,2vw,26px);
+    border-left:2px solid var(--line);padding:clamp(8px,1vw,12px) 0 clamp(8px,1vw,12px) clamp(14px,1.6vw,22px);position:relative}
+  .tl-item::before{content:"";position:absolute;left:-7px;top:calc(50% - 6px);width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--accent)}
+  .tl-item.now::before{background:var(--accent-2);border-color:var(--accent-2);box-shadow:0 0 0 5px rgba(255,183,3,.18)}
+  .tl-date{font-size:clamp(11px,1vw,15px);color:var(--accent);font-weight:700;letter-spacing:.03em}
+  .tl-item.now .tl-date{color:var(--accent-2)}
+  .tl-role{font-size:clamp(14px,1.35vw,21px);font-weight:700}
+  .tl-co{font-size:clamp(12px,1.05vw,16px);color:var(--muted);margin-top:2px}
+
+  /* ---------- tag pills ---------- */
+  .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .tag{font-size:clamp(11px,.95vw,14px);padding:6px 12px;border-radius:8px;border:1px solid var(--line);
+    background:rgba(76,201,240,.08);color:var(--txt)}
+  .tag.y{background:rgba(255,183,3,.1)}
+  .tag.g{background:rgba(126,231,135,.1)}
+
+  /* ---------- data vault visual ---------- */
+  .dv{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:6px}
+  .dv div{border:1px dashed var(--line);border-radius:12px;padding:14px;text-align:center}
+  .dv .h{border-color:var(--accent)}
+  .dv .l{border-color:var(--accent-2)}
+  .dv .s{border-color:var(--accent-3)}
+  .dv b{display:block;font-size:clamp(13px,1.2vw,18px);margin-bottom:4px}
+  .dv small{font-size:clamp(11px,.9vw,13px);color:var(--muted);line-height:1.45;display:block}
+
+  /* ---------- chrome ---------- */
+  .bar{position:fixed;left:0;top:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0;transition:width .3s ease;z-index:30}
+  .hud{position:fixed;right:16px;bottom:14px;display:flex;align-items:center;gap:8px;z-index:30}
+  .btn{
+    width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:rgba(11,18,32,.85);
+    color:var(--txt);font-size:14px;cursor:pointer;display:grid;place-items:center;font-family:inherit;
+  }
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn:focus-visible,.btn-lang:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn-lang{
+    height:34px;padding:0 12px;border-radius:9px;border:1px solid var(--line);background:rgba(11,18,32,.85);
+    color:var(--txt);font-size:12px;font-weight:700;letter-spacing:.08em;cursor:pointer;font-family:inherit;
+  }
+  .btn-lang:hover{border-color:var(--accent-2);color:var(--accent-2)}
+  .count{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;padding:0 6px}
+  .brand{position:fixed;left:var(--pad);bottom:14px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#5c718f;z-index:20}
+
+  .notes{
+    position:fixed;left:0;right:0;bottom:0;z-index:25;display:none;
+    background:rgba(6,11,20,.97);border-top:1px solid var(--line);
+    padding:14px var(--pad) 46px;max-height:38vh;overflow:auto;
+  }
+  .notes.show{display:block}
+  .notes h4{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-2);margin-bottom:8px}
+  .notes p{font-size:14px;line-height:1.55;color:#cfdcf3}
+
+  .help{
+    position:fixed;inset:0;z-index:40;display:none;place-items:center;background:rgba(4,8,16,.86);backdrop-filter:blur(3px);
+  }
+  .help.show{display:grid}
+  .help-box{background:var(--bg-soft);border:1px solid var(--line);border-radius:var(--radius);padding:28px 32px;max-width:460px;width:90%}
+  .help-box h3{margin-bottom:14px}
+  .help-box dl{display:grid;grid-template-columns:auto 1fr;gap:9px 16px;font-size:14px}
+  .help-box dt{color:var(--accent);font-weight:700;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .help-box dd{color:var(--muted)}
+
+  /* click zones for presenting without keyboard */
+  .zone{position:fixed;top:0;bottom:44px;width:9vw;z-index:15;cursor:pointer;background:transparent;border:0}
+  .zone.prev{left:0}
+  .zone.next{right:0}
+
+  [hidden]{display:none !important}
+
+  @media (max-width:820px){
+    .split,.g3,.g4{grid-template-columns:1fr}
+    .g2{grid-template-columns:1fr}
+    .tl-item{grid-template-columns:1fr;gap:4px}
+    .zone{display:none}
+  }
+
+  @media print{
+    body{overflow:visible;background:#fff}
+    .deck{height:auto}
+    .slide{display:flex !important;position:relative;inset:auto;height:100vh;page-break-after:always;break-after:page}
+    .hud,.bar,.zone,.notes,.help,.brand{display:none !important}
+  }
+</style>
+</head>
+<body>
+
+<div class="bar" id="bar"></div>
+
+<main class="deck" id="deck">
+
+  <!-- 1. TITLE -->
+  <section class="slide active"
+    data-note-en="Open with one line: I'm an Analytics Engineer — I build the trusted data layer that analysts and business teams run on. Then move fast to the next slide."
+    data-note-vi="Mở đầu bằng một câu: Tôi là Analytics Engineer — tôi xây lớp dữ liệu đáng tin cậy để analyst và business dùng. Rồi chuyển slide nhanh.">
+    <p class="eyebrow lang-en">Analytics Engineer · Data Governance</p>
+    <p class="eyebrow lang-vi" hidden>Analytics Engineer · Data Governance</p>
+    <h1 class="title-name">Đoàn Trung Nguyên</h1>
+    <p class="role lang-en">Turning raw data into <span>trusted, AI-ready</span> data products</p>
+    <p class="role lang-vi" hidden>Biến dữ liệu thô thành <span>data products đáng tin cậy</span>, sẵn sàng cho phân tích</p>
+    <div class="chips">
+      <span class="chip"><b>@</b> nguyendt.developer@gmail.com</span>
+      <span class="chip"><b>☏</b> +84 969 145 989</span>
+      <span class="chip"><b>in</b> linkedin.com/in/doantrungnguyen1809</span>
+    </div>
+    <p class="credo">“Attitude is everything.”</p>
+  </section>
+
+  <!-- 2. ABOUT -->
+  <section class="slide"
+    data-note-en="Three pillars: modeling with dbt, Data Vault 2.0 for the enterprise warehouse, and governance / data quality. Say that governance is what makes the models trustworthy, not just correct."
+    data-note-vi="Ba trụ cột: modeling với dbt, Data Vault 2.0 cho kho dữ liệu doanh nghiệp, và governance / data quality. Nhấn: governance là thứ làm model đáng tin, không chỉ đúng.">
+    <p class="eyebrow lang-en">About me</p>
+    <p class="eyebrow lang-vi" hidden>Về tôi</p>
+    <h2 class="lang-en">Analytics Engineer with a business brain and an engineering discipline</h2>
+    <h2 class="lang-vi" hidden>Analytics Engineer với tư duy business và kỷ luật engineering</h2>
+    <div class="rule"></div>
+    <div class="grid g3">
+      <div class="card">
+        <span class="ico" aria-hidden="true">🧱</span>
+        <h3 class="lang-en">Analytics Engineering</h3>
+        <h3 class="lang-vi" hidden>Analytics Engineering</h3>
+        <p class="lang-en">Advanced SQL and dbt on cloud warehouses. I build staging → intermediate → marts layers that are tested, documented and reusable.</p>
+        <p class="lang-vi" hidden>SQL nâng cao và dbt trên cloud warehouse. Tôi xây các lớp staging → intermediate → marts có test, có tài liệu, tái sử dụng được.</p>
+      </div>
+      <div class="card b">
+        <span class="ico" aria-hidden="true">🏛️</span>
+        <h3 class="lang-en">Data Modeling · Data Vault 2.0</h3>
+        <h3 class="lang-vi" hidden>Data Modeling · Data Vault 2.0</h3>
+        <p class="lang-en">Design and implementation of Data Vault 2.0 for enterprise data warehouses, plus star schema information marts for BI consumption.</p>
+        <p class="lang-vi" hidden>Thiết kế và triển khai Data Vault 2.0 cho enterprise data warehouse, cùng information mart dạng star schema cho BI.</p>
+      </div>
+      <div class="card c">
+        <span class="ico" aria-hidden="true">🛡️</span>
+        <h3 class="lang-en">Data Governance &amp; Quality</h3>
+        <h3 class="lang-vi" hidden>Data Governance &amp; Quality</h3>
+        <p class="lang-en">Data quality rules, thresholds and alerting, metadata and lineage, documentation standards and governance procedures.</p>
+        <p class="lang-vi" hidden>Data quality rules, threshold và alert, metadata và lineage, chuẩn tài liệu và quy trình governance.</p>
+      </div>
+    </div>
+    <div class="grid g4" style="margin-top:clamp(14px,1.8vw,24px)">
+      <div class="stat"><b>4</b><span class="lang-en">years in data</span><span class="lang-vi" hidden>năm làm dữ liệu</span></div>
+      <div class="stat"><b>2</b><span class="lang-en">years as Analytics Engineer</span><span class="lang-vi" hidden>năm làm Analytics Engineer</span></div>
+      <div class="stat"><b>dbt</b><span class="lang-en">Certified Developer</span><span class="lang-vi" hidden>Certified Developer</span></div>
+      <div class="stat"><b>7.0</b><span class="lang-en">IELTS · working in English</span><span class="lang-vi" hidden>IELTS · làm việc bằng tiếng Anh</span></div>
+    </div>
+  </section>
+
+  <!-- 3. THE ROLE -->
+  <section class="slide"
+    data-note-en="Explain the seam I own: engineers land the data, I make it mean something, analysts and BI consume it. My contract with the business is a tested, documented, named dataset."
+    data-note-vi="Giải thích vị trí tôi đứng: engineer đưa dữ liệu về, tôi làm nó có nghĩa, analyst và BI tiêu thụ. Cam kết của tôi với business là dataset có test, có docs, có tên rõ ràng.">
+    <p class="eyebrow lang-en">Where I sit</p>
+    <p class="eyebrow lang-vi" hidden>Vị trí trong luồng dữ liệu</p>
+    <h2 class="lang-en">The bridge between Data Engineering and the business</h2>
+    <h2 class="lang-vi" hidden>Cầu nối giữa Data Engineering và business</h2>
+    <div class="rule"></div>
+    <div class="flow">
+      <div class="node"><small class="lang-en">Sources</small><small class="lang-vi" hidden>Nguồn</small><b>OLTP · API · Files</b></div>
+      <div class="arrow">→</div>
+      <div class="node"><small>Data Engineer</small><b class="lang-en">Ingest &amp; land</b><b class="lang-vi" hidden>Nạp dữ liệu thô</b></div>
+      <div class="arrow">→</div>
+      <div class="node me"><small>Analytics Engineer</small><b class="lang-en">Model · Test · Document</b><b class="lang-vi" hidden>Model · Test · Tài liệu</b></div>
+      <div class="arrow">→</div>
+      <div class="node"><small>Analyst / BI</small><b class="lang-en">Explore &amp; report</b><b class="lang-vi" hidden>Khai thác &amp; báo cáo</b></div>
+      <div class="arrow">→</div>
+      <div class="node"><small class="lang-en">Business</small><small class="lang-vi" hidden>Business</small><b class="lang-en">Decisions</b><b class="lang-vi" hidden>Ra quyết định</b></div>
+    </div>
+    <div class="grid g2" style="margin-top:clamp(16px,2vw,28px)">
+      <div class="card">
+        <h3 class="lang-en">What I own</h3>
+        <h3 class="lang-vi" hidden>Tôi chịu trách nhiệm</h3>
+        <ul class="ticks">
+          <li class="lang-en"><strong>Data models</strong> — staging, intermediate, marts</li>
+          <li class="lang-vi" hidden><strong>Data models</strong> — staging, intermediate, marts</li>
+          <li class="lang-en"><strong>Business logic &amp; metrics</strong> defined once, reused everywhere</li>
+          <li class="lang-vi" hidden><strong>Business logic &amp; metrics</strong> định nghĩa một lần, dùng ở mọi nơi</li>
+          <li class="lang-en"><strong>Tests</strong> that fail loudly before a report does</li>
+          <li class="lang-vi" hidden><strong>Tests</strong> báo lỗi trước khi báo cáo sai</li>
+          <li class="lang-en"><strong>Documentation &amp; lineage</strong> so people can self-serve</li>
+          <li class="lang-vi" hidden><strong>Tài liệu &amp; lineage</strong> để mọi người tự phục vụ</li>
+        </ul>
+      </div>
+      <div class="card b">
+        <h3 class="lang-en">How I work</h3>
+        <h3 class="lang-vi" hidden>Cách tôi làm việc</h3>
+        <ul class="ticks">
+          <li class="lang-en">Software practices on data: <strong>Git, code review, CI, modularity</strong></li>
+          <li class="lang-vi" hidden>Áp dụng software practice vào data: <strong>Git, code review, CI, modular</strong></li>
+          <li class="lang-en">Start from the <strong>business question</strong>, not the table</li>
+          <li class="lang-vi" hidden>Bắt đầu từ <strong>câu hỏi business</strong>, không phải từ cái bảng</li>
+          <li class="lang-en">Agree <strong>thresholds with data owners</strong>, then automate the check</li>
+          <li class="lang-vi" hidden>Thống nhất <strong>threshold với data owner</strong>, rồi tự động hoá kiểm tra</li>
+          <li class="lang-en">If it isn't documented, it isn't done</li>
+          <li class="lang-vi" hidden>Chưa có tài liệu thì chưa xong việc</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. TIMELINE -->
+  <section class="slide"
+    data-note-en="Walk the arc forward: started close to the business in analytics and BI, moved deeper into modeling, and now own governance in a regulated financial domain."
+    data-note-vi="Kể theo mạch tiến: bắt đầu gần business với analytics và BI, đi sâu vào modeling, và giờ phụ trách governance trong lĩnh vực tài chính có quy định chặt.">
+    <p class="eyebrow lang-en">Experience</p>
+    <p class="eyebrow lang-vi" hidden>Kinh nghiệm</p>
+    <h2 class="lang-en">From dashboards to data platforms</h2>
+    <h2 class="lang-vi" hidden>Từ dashboard đến data platform</h2>
+    <div class="rule"></div>
+    <div class="tl">
+      <div class="tl-item now">
+        <div class="tl-date">Sep 2025 — <span class="lang-en">Now</span><span class="lang-vi" hidden>Hiện tại</span></div>
+        <div>
+          <div class="tl-role">Analytics Engineer · Data Governance</div>
+          <div class="tl-co">LPBank Securities</div>
+          <div class="tags">
+            <span class="tag">dbt</span><span class="tag">Amazon Redshift</span><span class="tag y">ELT</span>
+            <span class="tag g">Data Quality Framework</span><span class="tag g">Governance Policy</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">May 2024 — Aug 2025</div>
+        <div>
+          <div class="tl-role">Business Intelligence</div>
+          <div class="tl-co">Mcredit</div>
+          <div class="tags">
+            <span class="tag">Data-ink ratio dashboards</span><span class="tag y">DQ monitoring</span>
+            <span class="tag">Python profiling</span><span class="tag g">Metadata management</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">Apr 2023 — Apr 2024</div>
+        <div>
+          <div class="tl-role">Data Analyst · Analytics Engineer</div>
+          <div class="tl-co">OpenCommerce Group</div>
+          <div class="tags">
+            <span class="tag">Airflow DAGs</span><span class="tag">Star schema</span>
+            <span class="tag y">Data dictionary &amp; glossary</span><span class="tag g">Sales · Churn · CR analytics</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. CURRENT ROLE DEEP DIVE -->
+  <section class="slide scroll"
+    data-note-en="This is the slide to spend time on. Emphasise that in securities, a wrong number is a compliance problem, not just an inconvenience — that's why the quality framework and the policies exist."
+    data-note-vi="Đây là slide nên dành thời gian. Nhấn: trong chứng khoán, một con số sai là vấn đề tuân thủ, không chỉ là bất tiện — nên mới cần quality framework và policy.">
+    <p class="eyebrow lang-en">Current role · LPBank Securities</p>
+    <p class="eyebrow lang-vi" hidden>Vai trò hiện tại · LPBank Securities</p>
+    <h2 class="lang-en">Analytics-ready data for a regulated financial domain</h2>
+    <h2 class="lang-vi" hidden>Dữ liệu sẵn sàng phân tích cho lĩnh vực tài chính có quy định</h2>
+    <div class="rule"></div>
+    <div class="grid g2">
+      <div class="card">
+        <h3 class="lang-en">Modeling on dbt + Redshift</h3>
+        <h3 class="lang-vi" hidden>Modeling trên dbt + Redshift</h3>
+        <p class="lang-en">Designed, built and maintained analytics-ready models that turn raw source data into trusted datasets for business reporting and downstream analytics.</p>
+        <p class="lang-vi" hidden>Thiết kế, xây dựng và duy trì các model analytics-ready, biến dữ liệu nguồn thô thành dataset đáng tin cho báo cáo và các phân tích phía sau.</p>
+      </div>
+      <div class="card b">
+        <h3 class="lang-en">Reusable, scalable ELT</h3>
+        <h3 class="lang-vi" hidden>ELT tái sử dụng, mở rộng được</h3>
+        <p class="lang-en">Pipelines built to analytics engineering best practices — improving consistency, maintainability and model performance across financial data domains.</p>
+        <p class="lang-vi" hidden>Pipeline theo best practice của analytics engineering — tăng tính nhất quán, dễ bảo trì và hiệu năng model trên các domain dữ liệu tài chính.</p>
+      </div>
+      <div class="card c">
+        <h3 class="lang-en">Automated data quality validation</h3>
+        <h3 class="lang-vi" hidden>Kiểm soát chất lượng dữ liệu tự động</h3>
+        <p class="lang-en">Threshold-based monitoring and alerts that detect anomalies proactively, before they reach a report or a regulator.</p>
+        <p class="lang-vi" hidden>Monitoring theo threshold và alert, phát hiện bất thường sớm — trước khi nó đi vào báo cáo hoặc tới cơ quan quản lý.</p>
+      </div>
+      <div class="card">
+        <h3 class="lang-en">Governance built into the workflow</h3>
+        <h3 class="lang-vi" hidden>Governance nằm ngay trong workflow</h3>
+        <p class="lang-en">dbt as the governance surface: standardized modeling, automated testing, documentation and lineage instead of a separate manual process.</p>
+        <p class="lang-vi" hidden>dbt là nơi thực thi governance: chuẩn hoá modeling, test tự động, tài liệu và lineage — thay vì một quy trình thủ công tách rời.</p>
+      </div>
+      <div class="card b" style="grid-column:1/-1">
+        <h3 class="lang-en">Policies, standards and operating procedures</h3>
+        <h3 class="lang-vi" hidden>Chính sách, tiêu chuẩn và quy trình vận hành</h3>
+        <p class="lang-en">Developed and maintained data governance policies — data quality rules, documentation standards and governance processes — so trusted data assets stay trusted as the team grows.</p>
+        <p class="lang-vi" hidden>Xây dựng và duy trì chính sách data governance — quy tắc chất lượng dữ liệu, chuẩn tài liệu, quy trình governance — để tài sản dữ liệu vẫn đáng tin khi team mở rộng.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. DATA VAULT -->
+  <section class="slide"
+    data-note-en="Keep it concrete: Data Vault absorbs source change without rebuilding history; the star schema marts on top are what BI actually queries. Mention auditability as the reason it fits financial data."
+    data-note-vi="Nói cụ thể: Data Vault hấp thụ thay đổi từ nguồn mà không phải dựng lại lịch sử; star schema mart phía trên là thứ BI thực sự query. Nhấn tính audit được — lý do nó phù hợp dữ liệu tài chính.">
+    <p class="eyebrow lang-en">Specialisation</p>
+    <p class="eyebrow lang-vi" hidden>Chuyên môn sâu</p>
+    <h2 class="lang-en">Data Vault 2.0 for enterprise warehouses</h2>
+    <h2 class="lang-vi" hidden>Data Vault 2.0 cho enterprise data warehouse</h2>
+    <div class="rule"></div>
+    <div class="split">
+      <div>
+        <div class="dv">
+          <div class="h"><b>Hub</b><small class="lang-en">Business keys — the things the business talks about</small><small class="lang-vi" hidden>Business key — những thực thể business nói tới</small></div>
+          <div class="l"><b>Link</b><small class="lang-en">Relationships between those things, over time</small><small class="lang-vi" hidden>Quan hệ giữa các thực thể đó, theo thời gian</small></div>
+          <div class="s"><b>Satellite</b><small class="lang-en">Descriptive attributes and full change history</small><small class="lang-vi" hidden>Thuộc tính mô tả và toàn bộ lịch sử thay đổi</small></div>
+        </div>
+        <p class="flow-cap lang-en">Data flow</p>
+        <p class="flow-cap lang-vi" hidden>Luồng dữ liệu</p>
+        <div class="flow">
+          <div class="node">
+            <small class="lang-en">Data Vault</small><small class="lang-vi" hidden>Data Vault</small>
+            <b>DV</b>
+          </div>
+          <div class="arrow">→</div>
+          <div class="node">
+            <small class="lang-en">One Big Table</small><small class="lang-vi" hidden>One Big Table</small>
+            <b>OBT</b>
+          </div>
+          <div class="arrow">→</div>
+          <div class="node me">
+            <small class="lang-en">Summary</small><small class="lang-vi" hidden>Bảng tổng hợp</small>
+            <b>SMY</b>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 class="lang-en">Why it earns its complexity</h3>
+        <h3 class="lang-vi" hidden>Vì sao đáng để chấp nhận độ phức tạp</h3>
+        <ul class="ticks">
+          <li class="lang-en"><strong>Auditable by design</strong> — every record keeps its source and load timestamp</li>
+          <li class="lang-vi" hidden><strong>Audit được từ thiết kế</strong> — mỗi record giữ nguồn và thời điểm load</li>
+          <li class="lang-en"><strong>Absorbs change</strong> — new sources attach without reshaping existing history</li>
+          <li class="lang-vi" hidden><strong>Hấp thụ thay đổi</strong> — thêm nguồn mới mà không phải đập đi lịch sử cũ</li>
+          <li class="lang-en"><strong>Loads in parallel</strong> — hubs, links and satellites are independent</li>
+          <li class="lang-vi" hidden><strong>Load song song</strong> — hub, link, satellite độc lập với nhau</li>
+          <li class="lang-en"><strong>BI-friendly on top</strong> — OBT and summary layers keep queries simple and fast for analysts</li>
+          <li class="lang-vi" hidden><strong>Thân thiện BI ở tầng trên</strong> — lớp OBT và summary giúp analyst query đơn giản và nhanh</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. DATA QUALITY -->
+  <section class="slide scroll"
+    data-note-en="Key point: the whole loop lives inside dbt — no side scripts, no separate tool. Profile in SQL, agree the threshold with the data owner, codify it as a dbt test, alert on failure, and store the results so quality becomes a tracked metric. Thresholds are a business agreement, not a technical guess."
+    data-note-vi="Điểm nhấn: toàn bộ vòng lặp nằm trong dbt — không script rời, không tool tách biệt. Profile bằng SQL, thống nhất threshold với data owner, codify thành dbt test, alert khi fail, và lưu kết quả để chất lượng trở thành metric theo dõi được. Threshold là thoả thuận business, không phải phỏng đoán kỹ thuật.">
+    <p class="eyebrow lang-en">Data quality</p>
+    <p class="eyebrow lang-vi" hidden>Chất lượng dữ liệu</p>
+    <h2 class="lang-en">Catch the anomaly before the business does — all inside dbt</h2>
+    <h2 class="lang-vi" hidden>Phát hiện bất thường trước business — toàn bộ bằng dbt</h2>
+    <div class="rule"></div>
+    <div class="flow">
+      <div class="node"><small>1</small><b class="lang-en">Profile in SQL</b><b class="lang-vi" hidden>Profile bằng SQL</b></div>
+      <div class="arrow">→</div>
+      <div class="node"><small>2</small><b class="lang-en">Agree threshold</b><b class="lang-vi" hidden>Thống nhất threshold</b></div>
+      <div class="arrow">→</div>
+      <div class="node"><small>3</small><b class="lang-en">Codify as dbt test</b><b class="lang-vi" hidden>Codify thành dbt test</b></div>
+      <div class="arrow">→</div>
+      <div class="node me"><small>4</small><b class="lang-en">Alert on failure</b><b class="lang-vi" hidden>Alert khi fail</b></div>
+      <div class="arrow">→</div>
+      <div class="node"><small>5</small><b class="lang-en">Store &amp; track results</b><b class="lang-vi" hidden>Lưu &amp; theo dõi kết quả</b></div>
+    </div>
+    <div class="grid g3" style="margin-top:clamp(16px,2vw,28px)">
+      <div class="card">
+        <h3 class="lang-en">Dimensions I monitor</h3>
+        <h3 class="lang-vi" hidden>Các chiều tôi theo dõi</h3>
+        <p class="lang-en">Completeness, uniqueness, validity — extended with accuracy, consistency and timeliness where the data owner needs it.</p>
+        <p class="lang-vi" hidden>Completeness, uniqueness, validity — mở rộng thêm accuracy, consistency, timeliness khi data owner cần.</p>
+      </div>
+      <div class="card b">
+        <h3 class="lang-en">One toolchain: dbt tests</h3>
+        <h3 class="lang-vi" hidden>Một toolchain duy nhất: dbt tests</h3>
+        <p class="lang-en">Generic and singular tests, custom generic tests for reuse, with <strong>severity</strong> and <strong>warn_if / error_if</strong> encoding the agreed thresholds. No side scripts, no separate tool.</p>
+        <p class="lang-vi" hidden>Generic test, singular test và custom generic test để tái sử dụng, dùng <strong>severity</strong> và <strong>warn_if / error_if</strong> để mã hoá threshold đã thống nhất. Không script rời, không tool tách biệt.</p>
+      </div>
+      <div class="card c">
+        <h3 class="lang-en">Tested and versioned like code</h3>
+        <h3 class="lang-vi" hidden>Test và version như code</h3>
+        <p class="lang-en">Tests live in Git next to the models they protect and run on every build, so a rule can be reviewed, changed and audited like any other code.</p>
+        <p class="lang-vi" hidden>Test nằm trong Git cạnh model nó bảo vệ và chạy ở mọi lần build, nên một rule có thể review, thay đổi và audit như code bình thường.</p>
+      </div>
+      <div class="card" style="grid-column:1/-1">
+        <h3 class="lang-en">Quality as a visible metric</h3>
+        <h3 class="lang-vi" hidden>Chất lượng là một metric hiển thị được</h3>
+        <p class="lang-en">Test results are stored back in the warehouse (<strong>store_failures</strong>) and surfaced on dashboards, so data health is trended over time and owners get a concrete row list to fix — not just a red build.</p>
+        <p class="lang-vi" hidden>Kết quả test được ghi lại trong warehouse (<strong>store_failures</strong>) và đưa lên dashboard, để theo dõi sức khoẻ dữ liệu theo thời gian và data owner nhận được danh sách record cụ thể cần sửa — không chỉ là một build đỏ.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. GOVERNANCE & METADATA -->
+  <section class="slide"
+    data-note-en="Good line to use: metadata is how a team stops re-answering the same question. And it's now also what makes AI on top of your data accurate."
+    data-note-vi="Câu nên dùng: metadata là cách để team không phải trả lời lại cùng một câu hỏi. Và giờ nó cũng là thứ giúp AI trên dữ liệu của bạn trả lời đúng.">
+    <p class="eyebrow lang-en">Governance &amp; metadata</p>
+    <p class="eyebrow lang-vi" hidden>Governance &amp; metadata</p>
+    <h2 class="lang-en">Documentation is infrastructure</h2>
+    <h2 class="lang-vi" hidden>Tài liệu cũng là hạ tầng</h2>
+    <div class="rule"></div>
+    <div class="grid g2">
+      <div class="card">
+        <h3 class="lang-en">Technical + business metadata</h3>
+        <h3 class="lang-vi" hidden>Metadata kỹ thuật + business</h3>
+        <p class="lang-en">Data dictionary and business glossary kept current, so a metric means the same thing in every room of the company.</p>
+        <p class="lang-vi" hidden>Data dictionary và business glossary luôn được cập nhật, để một metric có cùng ý nghĩa ở mọi bộ phận.</p>
+      </div>
+      <div class="card b">
+        <h3 class="lang-en">Onboarding at speed</h3>
+        <h3 class="lang-vi" hidden>Onboarding nhanh hơn</h3>
+        <p class="lang-en">New team members find answers themselves instead of queueing for tribal knowledge.</p>
+        <p class="lang-vi" hidden>Thành viên mới tự tìm được câu trả lời, không phải chờ kiến thức truyền miệng.</p>
+      </div>
+      <div class="card c">
+        <h3 class="lang-en">Lineage for impact analysis</h3>
+        <h3 class="lang-vi" hidden>Lineage để phân tích ảnh hưởng</h3>
+        <p class="lang-en">Know what breaks downstream before changing a model — and who to tell.</p>
+        <p class="lang-vi" hidden>Biết trước cái gì sẽ vỡ ở phía sau khi thay đổi một model — và cần thông báo cho ai.</p>
+      </div>
+      <div class="card">
+        <h3 class="lang-en">Metadata as fuel for AI</h3>
+        <h3 class="lang-vi" hidden>Metadata làm nhiên liệu cho AI</h3>
+        <p class="lang-en">Curated metadata gives AI developers the semantic context they need to train and prompt models accurately on company data.</p>
+        <p class="lang-vi" hidden>Metadata được chuẩn hoá cung cấp ngữ cảnh semantic để AI developer train và prompt model chính xác trên dữ liệu công ty.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. TOOLBOX -->
+  <section class="slide"
+    data-note-en="Don't read the list. Say: SQL and dbt are where I'm strongest, Python is my utility knife, and I know BI well enough to model for the person consuming it."
+    data-note-vi="Đừng đọc cả danh sách. Nói: SQL và dbt là điểm mạnh nhất, Python là dao đa dụng, và tôi hiểu BI đủ để model theo góc nhìn người dùng cuối.">
+    <p class="eyebrow lang-en">Toolbox</p>
+    <p class="eyebrow lang-vi" hidden>Bộ công cụ</p>
+    <h2 class="lang-en">What I work with</h2>
+    <h2 class="lang-vi" hidden>Công cụ tôi sử dụng</h2>
+    <div class="rule"></div>
+    <div class="grid g2">
+      <div class="card">
+        <h3 class="lang-en">Code</h3><h3 class="lang-vi" hidden>Code</h3>
+        <div class="tags">
+          <span class="tag">SQL — advanced</span><span class="tag">Python</span><span class="tag">Jinja</span><span class="tag">Git</span>
+        </div>
+      </div>
+      <div class="card b">
+        <h3 class="lang-en">Transform &amp; model</h3><h3 class="lang-vi" hidden>Transform &amp; model</h3>
+        <div class="tags">
+          <span class="tag y">dbt</span><span class="tag y">Data Vault 2.0</span><span class="tag y">Star schema</span><span class="tag y">ELT design</span>
+        </div>
+      </div>
+      <div class="card c">
+        <h3 class="lang-en">Warehouse &amp; orchestration</h3><h3 class="lang-vi" hidden>Warehouse &amp; orchestration</h3>
+        <div class="tags">
+          <span class="tag g">Amazon Redshift</span><span class="tag g">BigQuery</span><span class="tag g">Airflow</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3 class="lang-en">BI &amp; delivery</h3><h3 class="lang-vi" hidden>BI &amp; delivery</h3>
+        <div class="tags">
+          <span class="tag">Power BI</span><span class="tag">Holistics</span><span class="tag">dbt docs</span>
+        </div>
+      </div>
+      <div class="card b" style="grid-column:1/-1">
+        <h3 class="lang-en">Ways of working</h3><h3 class="lang-vi" hidden>Kỹ năng làm việc</h3>
+        <div class="tags">
+          <span class="tag y">English communication</span><span class="tag y">Presentation</span>
+          <span class="tag y">Stakeholder collaboration</span>
+          <span class="tag y">Documentation mindset</span><span class="tag y">Business acumen</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. EDUCATION -->
+  <section class="slide"
+    data-note-en="The business degree is a feature, not a detour: it's why I can sit in a business conversation and leave with a modelling spec."
+    data-note-vi="Bằng business là điểm mạnh, không phải đường vòng: đó là lý do tôi có thể ngồi họp với business và ra về với một bản spec modeling.">
+    <p class="eyebrow lang-en">Education &amp; certificates</p>
+    <p class="eyebrow lang-vi" hidden>Học vấn &amp; chứng chỉ</p>
+    <h2 class="lang-en">A business foundation, a technical craft</h2>
+    <h2 class="lang-vi" hidden>Nền tảng business, tay nghề kỹ thuật</h2>
+    <div class="rule"></div>
+    <div class="grid g2">
+      <div class="card">
+        <span class="ico" aria-hidden="true">🎓</span>
+        <h3>National Economics University</h3>
+        <p class="lang-en">Bachelor of Business Administration in English (E-BBA) — classification: <strong>Distinction</strong></p>
+        <p class="lang-vi" hidden>Cử nhân Quản trị kinh doanh bằng tiếng Anh (E-BBA) — xếp loại: <strong>Distinction</strong></p>
+      </div>
+      <div class="card b">
+        <span class="ico" aria-hidden="true">📜</span>
+        <h3 class="lang-en">Certificates</h3><h3 class="lang-vi" hidden>Chứng chỉ</h3>
+        <div class="tags">
+          <span class="tag y">dbt Certified Developer</span><span class="tag y">Google Data Analytics</span><span class="tag y">IELTS 7.0</span>
+        </div>
+        <p style="margin-top:12px" class="lang-en">Currently diving deep into <strong>Data Governance</strong> — DAMA-DMBOK, data quality scoring and local data regulations.</p>
+        <p style="margin-top:12px" class="lang-vi" hidden>Đang học sâu về <strong>Data Governance</strong> — DAMA-DMBOK, DCAM, data quality scoring và các quy định dữ liệu trong nước.</p>
+      </div>
+      <div class="card c" style="grid-column:1/-1">
+        <p class="lang-en">The business degree is why I start from the decision and work backwards to the model. The technical craft is why the model holds up in production.</p>
+        <p class="lang-vi" hidden>Nền business là lý do tôi bắt đầu từ quyết định rồi lần về model. Tay nghề kỹ thuật là lý do model đó đứng vững trên production.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. CLOSING -->
+  <section class="slide"
+    data-note-en="Close on the three points, then stop talking and invite questions. Leave the contact details on screen."
+    data-note-vi="Kết bằng ba điểm, rồi dừng lại và mời câu hỏi. Để thông tin liên hệ trên màn hình.">
+    <p class="eyebrow lang-en">What I bring</p>
+    <p class="eyebrow lang-vi" hidden>Giá trị tôi mang lại</p>
+    <h2 class="lang-en">Trusted data, on purpose — not by luck</h2>
+    <h2 class="lang-vi" hidden>Dữ liệu đáng tin — do chủ đích, không do may mắn</h2>
+    <div class="rule"></div>
+    <div class="grid g3">
+      <div class="card">
+        <h3 class="lang-en">Business first</h3><h3 class="lang-vi" hidden>Business trước</h3>
+        <p class="lang-en">I translate between business and technical teams, and I model for the decision that has to be made.</p>
+        <p class="lang-vi" hidden>Tôi dịch qua lại giữa business và technical, và model theo quyết định cần được đưa ra.</p>
+      </div>
+      <div class="card b">
+        <h3 class="lang-en">Engineering discipline</h3><h3 class="lang-vi" hidden>Kỷ luật engineering</h3>
+        <p class="lang-en">Version control, modular models, automated tests, CI — data work treated like software.</p>
+        <p class="lang-vi" hidden>Version control, model modular, test tự động, CI — làm data như làm software.</p>
+      </div>
+      <div class="card c">
+        <h3 class="lang-en">Governance mindset</h3><h3 class="lang-vi" hidden>Tư duy governance</h3>
+        <p class="lang-en">Quality rules, metadata and lineage in place from day one, so trust scales with the platform.</p>
+        <p class="lang-vi" hidden>Quy tắc chất lượng, metadata và lineage có từ ngày đầu, để niềm tin lớn cùng platform.</p>
+      </div>
+    </div>
+    <p class="sub lang-en">Fully prepared to be hands-on at every step — on the way to becoming a skilled “Data-Head”.</p>
+    <p class="sub lang-vi" hidden>Sẵn sàng hands-on ở mọi bước — trên con đường trở thành một “Data-Head” thực thụ.</p>
+    <div class="chips">
+      <span class="chip"><b>@</b> nguyendt.developer@gmail.com</span>
+      <span class="chip"><b>☏</b> +84 969 145 989</span>
+      <span class="chip"><b>in</b> linkedin.com/in/doantrungnguyen1809</span>
+    </div>
+    <p class="credo lang-en">Thank you — happy to take questions.</p>
+    <p class="credo lang-vi" hidden>Cảm ơn — rất mong nhận được câu hỏi từ mọi người.</p>
+  </section>
+
+</main>
+
+<button class="zone prev" id="zonePrev" aria-label="Previous slide"></button>
+<button class="zone next" id="zoneNext" aria-label="Next slide"></button>
+
+<p class="brand">Đoàn Trung Nguyên · Analytics Engineer</p>
+
+<div class="hud">
+  <button class="btn-lang" id="btnLang" aria-label="Switch language">EN</button>
+  <button class="btn" id="btnNotes" title="Speaker notes (N)" aria-label="Toggle speaker notes">✎</button>
+  <button class="btn" id="btnHelp" title="Shortcuts (?)" aria-label="Show keyboard shortcuts">?</button>
+  <button class="btn" id="btnFull" title="Fullscreen (F)" aria-label="Toggle fullscreen">⛶</button>
+  <button class="btn" id="btnPrev" title="Previous (←)" aria-label="Previous slide">‹</button>
+  <span class="count" id="count">1 / 11</span>
+  <button class="btn" id="btnNext" title="Next (→)" aria-label="Next slide">›</button>
+</div>
+
+<aside class="notes" id="notes" aria-live="polite">
+  <h4>Speaker notes</h4>
+  <p id="notesText"></p>
+</aside>
+
+<div class="help" id="help" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts">
+  <div class="help-box">
+    <h3>Keyboard shortcuts</h3>
+    <dl>
+      <dt>→ / Space</dt><dd>Next slide</dd>
+      <dt>← </dt><dd>Previous slide</dd>
+      <dt>Home / End</dt><dd>First / last slide</dd>
+      <dt>1 – 9</dt><dd>Jump to slide</dd>
+      <dt>F</dt><dd>Fullscreen</dd>
+      <dt>N</dt><dd>Speaker notes</dd>
+      <dt>L</dt><dd>English / Vietnamese</dd>
+      <dt>P</dt><dd>Print / export to PDF</dd>
+      <dt>Esc</dt><dd>Close this panel</dd>
+    </dl>
+  </div>
+</div>
+
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var i = 0;
+  var lang = 'en';
+  var bar = document.getElementById('bar');
+  var count = document.getElementById('count');
+  var notes = document.getElementById('notes');
+  var notesText = document.getElementById('notesText');
+  var help = document.getElementById('help');
+  var btnLang = document.getElementById('btnLang');
+
+  function paintNotes() {
+    var s = slides[i];
+    notesText.textContent = s.getAttribute('data-note-' + lang) || s.getAttribute('data-note-en') || '';
+  }
+
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (s, k) { s.classList.toggle('active', k === i); });
+    bar.style.width = ((i + 1) / slides.length * 100) + '%';
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    slides[i].scrollTop = 0;
+    paintNotes();
+  }
+
+  function setLang(next) {
+    lang = next;
+    document.documentElement.lang = (lang === 'vi') ? 'vi' : 'en';
+    document.querySelectorAll('.lang-en').forEach(function (el) { el.hidden = (lang !== 'en'); });
+    document.querySelectorAll('.lang-vi').forEach(function (el) { el.hidden = (lang !== 'vi'); });
+    btnLang.textContent = (lang === 'en') ? 'EN' : 'VI';
+    btnLang.setAttribute('aria-label', lang === 'en' ? 'Switch to Vietnamese' : 'Switch to English');
+    paintNotes();
+  }
+
+  document.getElementById('btnNext').onclick = function () { show(i + 1); };
+  document.getElementById('btnPrev').onclick = function () { show(i - 1); };
+  document.getElementById('zoneNext').onclick = function () { show(i + 1); };
+  document.getElementById('zonePrev').onclick = function () { show(i - 1); };
+  btnLang.onclick = function () { setLang(lang === 'en' ? 'vi' : 'en'); };
+  document.getElementById('btnNotes').onclick = function () { notes.classList.toggle('show'); };
+  document.getElementById('btnHelp').onclick = function () { help.classList.toggle('show'); };
+  document.getElementById('btnFull').onclick = toggleFull;
+  help.onclick = function () { help.classList.remove('show'); };
+
+  function toggleFull() {
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else if (document.documentElement.requestFullscreen) { document.documentElement.requestFullscreen(); }
+  }
+
+  document.addEventListener('keydown', function (e) {
+    var k = e.key;
+    if (k === 'ArrowRight' || k === 'PageDown' || k === ' ' || k === 'Enter') { e.preventDefault(); show(i + 1); }
+    else if (k === 'ArrowLeft' || k === 'PageUp') { e.preventDefault(); show(i - 1); }
+    else if (k === 'Home') { show(0); }
+    else if (k === 'End') { show(slides.length - 1); }
+    else if (k === 'Escape') { help.classList.remove('show'); }
+    else if (/^[1-9]$/.test(k)) { show(parseInt(k, 10) - 1); }
+    else if (k === 'f' || k === 'F') { toggleFull(); }
+    else if (k === 'n' || k === 'N') { notes.classList.toggle('show'); }
+    else if (k === 'l' || k === 'L') { setLang(lang === 'en' ? 'vi' : 'en'); }
+    else if (k === 'p' || k === 'P') { window.print(); }
+    else if (k === '?') { help.classList.toggle('show'); }
+  });
+
+  // swipe support for tablets
+  var x0 = null;
+  document.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 60) { show(dx < 0 ? i + 1 : i - 1); }
+    x0 = null;
+  }, { passive: true });
+
+  setLang('en');
+  show(0);
+})();
+</script>
+</body>
+</html>
